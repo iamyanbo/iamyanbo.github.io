@@ -373,6 +373,7 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .note-prose caption{text-align:left;font:500 13px/1.7 var(--sans);color:var(--muted);margin-bottom:12px}
 .note-prose .note-small{font-size:13px;line-height:1.8;color:var(--muted)}
 .nutrition-intro{padding-bottom:32px;margin-bottom:34px;border-bottom:1px solid var(--line)}
+.nutrition-prose>h2:first-child{margin-top:0}
 .nutrition-prose .nutrition-table{min-width:470px;font-variant-numeric:tabular-nums}
 .nutrition-table th:not(:first-child),.nutrition-table td{text-align:right;white-space:nowrap}
 .nutrition-table tbody th{font-weight:400;min-width:150px}
