@@ -17,6 +17,7 @@ No package installation is needed to build it.
 | CURI case study | `content/curi-case-study.html`, `content/curi-findings.html` |
 | About me, gym schedule, and playlists | `content/personality.html` |
 | Personal blog topics and post links | `content/notes-section.html` |
+| Individual blog posts | `content/notes/<slug>.html` |
 | Styles and attractor animation | `site/` |
 | Images and resume | `assets/` |
 
@@ -37,6 +38,11 @@ python -m http.server 8765 --directory dist
 
 Open http://localhost:8765/ to preview the site. The generated `dist/` directory
 is ignored by Git and rebuilt during deployment.
+
+Blog posts in `content/notes/<slug>.html` publish at `/notes/<slug>/`.
+Use `@@STYLESHEET@@` for the shared stylesheet. Files ending in `.draft.html`
+are excluded from the published site. Add a post link to the appropriate topic
+in `content/notes-section.html` when it is ready.
 
 The existing `/1/` assignment redirect is preserved in the published output.
 The interactive essays remain at https://iamyanbo.github.io/llm-notes/ in their

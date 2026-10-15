@@ -125,5 +125,15 @@ for concept in concepts:
 (out/'curi.html').write_text((root/'content/curi-case-study.html').read_text(encoding='utf-8').replace('@@CURI_FINDINGS@@',(root/'content/curi-findings.html').read_text(encoding='utf-8')).replace('href="style.css"','href="'+stylesheet+'"').replace('<img src="assets/curi-loop-v2.svg" width="760" height="560" alt="CURI’s loop: ask and interpret, design a test, run the study, independently verify, and retain the evidence record.">',(root/'content/curi-process.html').read_text(encoding='utf-8')),encoding='utf-8')
 print('Built combined portfolio and 3 earlier design previews.')
 
+for source in (root/'content/notes').glob('*.html'):
+    if source.name.endswith('.draft.html'):
+        continue
+    slug=source.stem
+    assert re.fullmatch(r'[a-z0-9-]+',slug), 'Invalid note slug: '+slug
+    page=source.read_text(encoding='utf-8').replace('@@STYLESHEET@@','/'+stylesheet)
+    assert '@@' not in page, 'Unfinished note: '+source.name
+    destination=out/'notes'/slug
+    destination.mkdir(parents=True,exist_ok=True)
+    (destination/'index.html').write_text(page,encoding='utf-8')
 shutil.copytree(root/'1',out/'1',dirs_exist_ok=True)
 (out/'.nojekyll').touch()

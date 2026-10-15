@@ -1,7 +1,16 @@
 import {readFile,access,readdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {ATTRACTORS,POINT_COUNT} from '../site/attractors.js';
-for(const file of ['index.html','attractor.html','wave.html','field.html','curi.html']){
+async function htmlFiles(folder=''){
+  const result=[];
+  for(const entry of await readdir('dist/'+folder,{withFileTypes:true})){
+    const path=folder+entry.name;
+    if(entry.isDirectory())result.push(...await htmlFiles(path+'/'));
+    else if(entry.name.endsWith('.html'))result.push(path);
+  }
+  return result;
+}
+for(const file of await htmlFiles()){
   const html=await readFile('dist/'+file,'utf8');
   assert(!html.includes('@@'));
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
@@ -11,11 +20,14 @@ for(const file of ['index.html','attractor.html','wave.html','field.html','curi.
     const target=match[1];
     if(target.startsWith('#'))assert(ids.includes(target.slice(1)),target);
     else if(!/^[a-z]+:/i.test(target)){
-      const [path,fragment]=target.split('#'),local=path.split('?')[0];await access('dist/'+local);
-      if(fragment){const destination=await readFile('dist/'+local,'utf8');assert(destination.includes('id="'+fragment+'"'),'Missing cross-page fragment: '+target);}
+      const url=new URL(target,'https://portfolio.invalid/'+file);
+      const path=decodeURIComponent(url.pathname).replace(/^\/+/,''),local=path.endsWith('/')?path+'index.html':path||'index.html';
+      await access('dist/'+local);
+      if(url.hash){const destination=await readFile('dist/'+local,'utf8');assert(destination.includes('id="'+decodeURIComponent(url.hash.slice(1))+'"'),'Missing cross-page fragment: '+target);}
     }
   }
   if(file==='curi.html'){assert(html.includes('214'));assert(html.includes('id="reproduce"'));continue;}
+  if(!['index.html','attractor.html','wave.html','field.html'].includes(file))continue;
   assert(html.includes('id="motion-toggle"'));assert(html.includes('<dialog'));
   assert.equal((html.match(/class="project(?: scene-panel)?"/g)||[]).length,file==='index.html'?4:2);
   if(file==='index.html'){
@@ -40,4 +52,4 @@ for(let system=0;system<ATTRACTORS.length;system++)for(let path=1;path<4;path++)
   const start=(system*4+path)*traceSize,previous=start-traceSize;
   assert(tracePoints.subarray(start,start+traceSize).some((x,i)=>Math.abs(x-tracePoints[previous+i])>.01),'Each tracer must have a different integrated path');
 }
-console.log('Verified combined portfolio and three earlier concepts, local assets, links, controls, and modules.');
+console.log('Verified portfolio, blog posts, earlier concepts, local assets, links, controls, and modules.');
