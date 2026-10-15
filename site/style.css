@@ -367,6 +367,10 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .note-video{max-width:560px;margin:28px auto 32px}
 .note-video video{display:block;width:100%;height:auto;background:#101b29;border-radius:4px}
 .note-video figcaption{font:400 13px/1.7 var(--sans);color:var(--muted);margin-top:12px}
+.note-song{max-width:560px;margin:0 auto 32px}
+.note-prose .note-song p{font:400 13px/1.7 var(--sans);color:var(--muted);margin:0 0 13px}
+.note-song iframe{display:block;width:100%;height:152px;border:0;border-radius:12px;background:#181818}
+.note-prose .note-song>a{display:inline-block;margin-top:12px;font:400 12px/1.7 var(--sans);text-decoration:none;border-bottom:1px solid var(--line)}
 .note-table-scroll{max-width:100%;overflow-x:auto;margin:24px 0;scrollbar-color:var(--blue) transparent}
 .note-table-scroll:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 .note-table-scroll table{margin:0}
