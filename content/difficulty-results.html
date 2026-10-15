@@ -1,0 +1,19 @@
+<figure class="result-chart pedestrian-results">
+<h4>Largest improvement: pedestrian detection</h4>
+<p class="chart-metric">Pedestrian 3D AP · KITTI validation · moderate · IoU 0.5 · 80 epochs</p>
+<div class="score-group">
+<h5>PointPillars <span>+8.78 AP points</span></h5>
+<div class="score-row baseline-score"><div><span>Semantic baseline · no entropy</span><strong>58.13</strong></div><div class="score-track" aria-hidden="true"><i style="width:58.13%"></i></div></div>
+<div class="score-row entropy-score"><div><span>Semantic baseline + entropy</span><strong>59.56</strong></div><div class="score-track" aria-hidden="true"><i style="width:59.56%"></i></div></div>
+<div class="score-row"><div><span>DifficultyPainting</span><strong>68.34</strong></div><div class="score-track" aria-hidden="true"><i style="width:68.34%"></i></div></div>
+</div>
+<div class="score-group">
+<h5>SECOND <span>+5.81 AP points</span></h5>
+<div class="score-row baseline-score"><div><span>Semantic baseline · no entropy</span><strong>67.90</strong></div><div class="score-track" aria-hidden="true"><i style="width:67.90%"></i></div></div>
+<div class="score-row entropy-score"><div><span>Semantic baseline + entropy</span><strong>67.19</strong></div><div class="score-track" aria-hidden="true"><i style="width:67.19%"></i></div></div>
+<div class="score-row"><div><span>DifficultyPainting</span><strong>73.71</strong></div><div class="score-track" aria-hidden="true"><i style="width:73.71%"></i></div></div>
+</div>
+<div class="score-axis" aria-hidden="true"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+<p class="chart-takeaway">Across all three classes, mean AP rises to 80.03 for PointPillars (+3.51) and 82.51 for SECOND (+2.34). Cyclist AP also improves; car AP falls slightly.</p>
+<figcaption>Gains are measured against each backbone’s stronger prior run in UncertaintyPainting. Both earlier variants are shown. Input features and database sampling differ in the published configs, so these gains compare complete runs and do not isolate the difficulty signal. <a href="https://github.com/iamyanbo/UncertaintyPainting#evaluation-results">Baseline runs ↗</a> · <a href="https://github.com/iamyanbo/DifficultyPainting#key-results-kitti-validation-3d-ap--standard-iou">DifficultyPainting runs ↗</a></figcaption>
+</figure>

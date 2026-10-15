@@ -1,0 +1,36 @@
+<div class="curi-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 800" role="img" aria-labelledby="curi-diagram-title curi-diagram-desc">
+<title id="curi-diagram-title">CURI: from a research question to a checked finding</title>
+<desc id="curi-diagram-desc">A proposed study passes an admission gate before execution. Rejected proposals return for revision. The experiment is independently checked, then interpreted. Interpretation informs the next question, and every verdict stays in the research record.</desc>
+<defs>
+<marker id="curi-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto"><path d="m3 2 5 4-5 4" fill="none" stroke="#3864b7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="curi-return-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto"><path d="m3 2 5 4-5 4" fill="none" stroke="#8498b4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<!-- A single downward path; both return routes stay outside it. -->
+<g fill="none" stroke="#3864b7" stroke-width="2.4" marker-end="url(#curi-arrow)">
+<path d="M320 113V154"/><path d="M320 260V307"/><path d="M320 391V439"/><path d="M320 523V571"/><path d="M320 655V704"/>
+<path d="M465 613H530Q550 613 550 593V91Q550 71 530 71H465"/>
+</g>
+<path d="M237 207H110Q90 207 90 187V91Q90 71 110 71H175" fill="none" stroke="#8498b4" stroke-width="2" marker-end="url(#curi-return-arrow)"/>
+<g font-family="Arial,sans-serif" fill="#617895" font-size="19"><text x="118" y="193">revise</text><text x="337" y="289">admit</text><text x="579" y="380" text-anchor="middle" transform="rotate(-90 579 380)">next question</text></g>
+<!-- Input, admission decision, execution, verification, interpretation. -->
+<rect x="175" y="29" width="290" height="84" rx="42" fill="#dceaff" stroke="#7b9ccd" stroke-width="1.8"/>
+<path d="m320 155 83 52-83 53-83-53Z" fill="#f8fbff" stroke="#8da7ca" stroke-width="1.8"/>
+<rect x="175" y="307" width="290" height="84" rx="9" fill="#f8fbff" stroke="#a6bad1" stroke-width="1.8"/>
+<rect x="175" y="439" width="290" height="84" rx="9" fill="#f8fbff" stroke="#a6bad1" stroke-width="1.8"/>
+<rect x="175" y="571" width="290" height="84" rx="9" fill="#e2edff" stroke="#7b9ccd" stroke-width="1.8"/>
+<g text-anchor="middle" font-family="Arial,sans-serif" fill="#18314d">
+<g class="curi-node-label" transform="translate(320 72.67)"><text x="0" y="-13" dominant-baseline="central" font-size="27" font-weight="500">Research question</text><text x="0" y="15" dominant-baseline="central" font-size="18" fill="#617895">Competing explanations</text></g>
+<g class="curi-node-label" transform="translate(320 350.67)"><text x="0" y="-13" dominant-baseline="central" font-size="27" font-weight="500">Run experiment</text><text x="0" y="15" dominant-baseline="central" font-size="18" fill="#617895">Collect evidence</text></g>
+<g class="curi-node-label" transform="translate(320 482.67)"><text x="0" y="-13" dominant-baseline="central" font-size="27" font-weight="500">Independent check</text><text x="0" y="15" dominant-baseline="central" font-size="18" fill="#617895">Rerun decisive tests</text></g>
+<g class="curi-node-label" transform="translate(320 614.67)"><text x="0" y="-13" dominant-baseline="central" font-size="27" font-weight="500">Interpret result</text><text x="0" y="15" dominant-baseline="central" font-size="18" fill="#617895">What does it establish?</text></g>
+<text x="320" y="207.5" dominant-baseline="central" font-size="25" font-weight="500">Admit?</text>
+</g>
+<!-- The record is a store, rather than another experiment stage. -->
+<path d="M184 722V758C184 782 456 782 456 758V722Z" fill="#f8fbff" stroke="#a6bad1" stroke-width="1.6"/>
+<ellipse cx="320" cy="722" rx="136" ry="17" fill="#edf5ff" stroke="#a6bad1" stroke-width="1.6"/>
+<text x="320" y="755" dominant-baseline="central" font-family="Arial,sans-serif" font-size="23" font-weight="500" fill="#18314d" text-anchor="middle">Research record</text>
+</svg>
+<p class="curi-diagram-key">Supported, bounded, refuted, or inconclusive—every verdict stays.</p>
+</div>
+

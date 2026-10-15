@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-labelledby="title desc">
+<title id="title">Image-goal UAV navigation</title><desc id="desc">Illustrative route from a random start around obstacles to a goal, specified by an image. This is a task schematic, not a recorded flight.</desc>
+<defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ccd9ec" stroke-width=".7"/></pattern><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="m0 0 8 4-8 4" fill="#2459d3"/></marker></defs>
+<rect width="800" height="540" fill="#eff5ff"/><rect x="28" y="74" width="744" height="410" fill="url(#grid)"/>
+<g font-family="sans-serif" fill="#182642"><text x="32" y="38" font-size="16" letter-spacing="2">IMAGE-GOAL NAVIGATION</text><text x="32" y="518" font-size="13" fill="#5c6f8b">Task schematic · illustrative route</text></g>
+<g fill="#dce5f4" stroke="#b5c6df" stroke-width="1.5"><path d="M240 166h112v122H240z"/><path d="M447 338h126v112H447z"/><path d="M450 153h78v95h-78z"/><path d="M130 374h91v75h-91z"/></g>
+<g fill="#eef3fc" stroke="#b5c6df"><path d="m240 166 22-16h112l-22 16zm112 0 22-16v122l-22 16"/><path d="m447 338 22-16h126l-22 16zm126 0 22-16v112l-22 16"/><path d="m450 153 18-13h78l-18 13zm78 0 18-13v95l-18 13"/></g>
+<path d="M118 308C188 303 193 326 275 326S369 320 392 273 404 179 412 134 478 107 536 110 589 127 638 189" fill="none" stroke="#91b8ed" stroke-width="18" stroke-linecap="round" opacity=".25"/>
+<path d="M118 308C188 303 193 326 275 326S369 320 392 273 404 179 412 134 478 107 536 110 589 127 638 189" fill="none" stroke="#2459d3" stroke-width="3.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+<g transform="translate(118 308)" stroke="#182642" stroke-width="2.5" fill="#f5f8ff"><path d="m-15-15 30 30m0-30-30 30"/><circle cx="-19" cy="-19" r="10"/><circle cx="19" cy="-19" r="10"/><circle cx="-19" cy="19" r="10"/><circle cx="19" cy="19" r="10"/><circle r="8" fill="#2459d3"/></g>
+<circle cx="647" cy="210" r="18" fill="#ede9ff" stroke="#7964c7" stroke-width="2"/><circle cx="647" cy="210" r="6" fill="#7964c7"/>
+<g font-family="sans-serif" font-size="17" fill="#182642"><text x="63" y="367">Random start</text><text x="322" y="376" fill="#2459d3">Plan → observe → replan</text><text x="592" y="255">Destination</text></g>
+<path d="M659 278v27" stroke="#7964c7" stroke-width="1.5"/>
+<g transform="translate(594 309)"><rect width="147" height="135" rx="7" fill="#fff" stroke="#7964c7" stroke-width="1.5"/><rect x="8" y="8" width="131" height="87" fill="#d5e6fa"/><path d="M8 95V68l40-17 27 18 32-28 32 27v27" fill="#849dc0"/><path d="M8 95h131L82 78H60z" fill="#bacce6"/><rect x="67" y="57" width="18" height="27" fill="#ede9ff" stroke="#7964c7"/><text x="12" y="120" font-family="sans-serif" font-size="14" fill="#182642">Goal image*</text></g>
+<text x="547" y="479" font-family="sans-serif" font-size="11" fill="#5c6f8b">*Illustrated view, not an episode observation</text>
+</svg>

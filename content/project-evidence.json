@@ -1,0 +1,26 @@
+{
+  "Long Horizon Planning for UAV Navigation": {
+    "contribution": "I built the simulator task, training code, and evaluation pipeline, and reproduced a released navigation baseline. My current study asks how the model should retain and use its earlier observations.",
+    "result": "An earlier eight-step predictor had 14.57% lower feature error than copying the current observation, across 688 overlapping validation windows. In a separate longer-goal PPO experiment, the policy reached the goal in 0 of 24 training flights. Reliable navigation remains the research objective.",
+    "source": "https://github.com/iamyanbo/uav-image-goal-navigation/blob/main/docs/results/20261009/README.md",
+    "source_label": "Evaluation conditions (research repository, currently private)"
+  },
+  "DifficultyPainting": {
+    "contribution": "I built the difficulty-prediction model and camera-to-LiDAR projection, then adapted PointPillars and SECOND to use the estimate during training and prediction.",
+    "result": "The largest gains were in pedestrian detection: PointPillars rose from 59.56 to 68.34 AP (+8.78), and SECOND from 67.90 to 73.71 (+5.81), against each backbone’s stronger UncertaintyPainting baseline. Mean 3D AP rose by 3.51 and 2.34 points. Cyclist AP increased; car AP decreased slightly. Input and augmentation changes prevent attributing the full difference to difficulty alone.",
+    "source": "https://github.com/iamyanbo/DifficultyPainting#key-results-kitti-validation-3d-ap--standard-iou",
+    "source_label": "DifficultyPainting scores and method"
+  },
+  "Reservoir Computing + SINDy": {
+    "contribution": "I used an echo state network to generate additional trajectories from incomplete, noisy observations, filtered them using rollout uncertainty, and compared the equations SINDy recovered with and without that extra data.",
+    "result": "The additional data gave only marginal gains in equation recovery. The Lorenz fits above are almost unchanged, despite the extra generated trajectories.",
+    "source": "https://github.com/iamyanbo/Data-Driven-Discovery-of-Governing-Equations-via-Reservoir-Computing-Data-Augmentation#results",
+    "source_label": "Reported equation fits"
+  },
+  "CURI": {
+    "contribution": "I built the research runtime and its execution, verification, record-keeping, and cost-tracking tools. The runtime separates running an experiment from deciding what its result supports.",
+    "result": "At half the cache budget, cumulative-attention retention scored 0% needle retrieval, matching random eviction in a three-sample test. The same run found speculative decoding slower despite 38–54% acceptance. These are bounded reproductions of known results; the case study shows the measurements.",
+    "source": "https://github.com/iamyanbo/CURI/blob/main/docs/run-report.md",
+    "source_label": "Run report and limits of the findings"
+  }
+}

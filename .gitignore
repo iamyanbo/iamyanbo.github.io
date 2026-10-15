@@ -1,0 +1,6 @@
+dist/
+__pycache__/
+node_modules/
+.openai/
+.sites-runtime/
+*.tar.gz

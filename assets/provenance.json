@@ -1,0 +1,129 @@
+[
+  {
+    "file": "uncertainty.png",
+    "source": "https://github.com/iamyanbo/UncertaintyPainting/blob/main/assets/test_uncertainty_result.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/UncertaintyPainting/main/assets/test_uncertainty_result.png",
+    "width": 1800,
+    "height": 500,
+    "bytes": 212401,
+    "alterations": "none"
+  },
+  {
+    "file": "point-cloud.png",
+    "source": "https://github.com/iamyanbo/UncertaintyPainting/blob/main/assets/view_result_000015.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/UncertaintyPainting/main/assets/view_result_000015.png",
+    "width": 1200,
+    "height": 400,
+    "bytes": 273238,
+    "alterations": "none"
+  },
+  {
+    "file": "cyclist-analysis.png",
+    "source": "https://github.com/iamyanbo/UncertaintyPainting/blob/main/assets/cyclist_2d_analysis.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/UncertaintyPainting/main/assets/cyclist_2d_analysis.png",
+    "width": 1800,
+    "height": 500,
+    "bytes": 158516,
+    "alterations": "none"
+  },
+  {
+    "file": "cyclist-cloud.png",
+    "source": "https://github.com/iamyanbo/UncertaintyPainting/blob/main/assets/cyclist_3d_painted.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/UncertaintyPainting/main/assets/cyclist_3d_painted.png",
+    "width": 1200,
+    "height": 400,
+    "bytes": 331538,
+    "alterations": "none"
+  },
+  {
+    "file": "strata.png",
+    "source": "https://github.com/iamyanbo/strata/blob/main/docs/images/component-lens.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/strata/main/docs/images/component-lens.png",
+    "width": 1478,
+    "height": 882,
+    "bytes": 190009,
+    "alterations": "none"
+  },
+  {
+    "file": "chasing-roles.png",
+    "source": "https://github.com/iamyanbo/llm-notes/blob/main/foundations/public/assets/chasing-roles.png",
+    "local_source": "C:\\Users\\yanbo\\Downloads\\portfolio\\llm-notes\\foundations\\public\\assets\\chasing-roles.png",
+    "width": 2172,
+    "height": 724,
+    "bytes": 1546423,
+    "alterations": "none"
+  },
+  {
+    "file": "uav-observation.png",
+    "source": "https://github.com/iamyanbo/UAV/blob/master/research/rgb_flight/evidence/learning-repair-20260924/recorded-moving-frame.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/UAV/master/research/rgb_flight/evidence/learning-repair-20260924/recorded-moving-frame.png",
+    "width": 640,
+    "height": 480,
+    "bytes": 352462,
+    "alterations": "none",
+    "caption_scope": "Simulator observation; not a newer learned-policy result."
+  },
+  {
+    "file": "sindy-equations.svg",
+    "source": "https://github.com/iamyanbo/Data-Driven-Discovery-of-Governing-Equations-via-Reservoir-Computing-Data-Augmentation/blob/main/README.md#results",
+    "source_blob_sha": "c7e9aed0f693f9e7522910d0007c974806bdf132",
+    "width": 760,
+    "height": 440,
+    "alterations": "Original SVG typesetting of repository-reported Lorenz x-equation fits; no new evaluation."
+  },
+  {
+    "file": "curi-loop.svg",
+    "source": "https://github.com/iamyanbo/CURI/blob/main/README.md#architecture",
+    "source_blob_sha": "fd3f75722f505652d64d4e2ae1fea907a90c60e6",
+    "width": 760,
+    "height": 460,
+    "alterations": "Original explanatory diagram of the documented research loop; not a screenshot."
+  },
+  {
+    "file": "difficulty-overlay.png",
+    "source": "https://github.com/iamyanbo/DifficultyPainting/blob/main/assets/difficulty_overlay_000015.png",
+    "download_url": "https://raw.githubusercontent.com/iamyanbo/DifficultyPainting/main/assets/difficulty_overlay_000015.png",
+    "bytes": 787714,
+    "sha256": "4803bfe13c179c5976ba91a862176196868708d9cdd60e887aeca267f63bfdb6",
+    "alterations": "none"
+  },
+  {
+    "file": "uav-navigation.svg",
+    "source": "Local task schematic based on the image-goal navigation research description",
+    "alterations": "Code-native illustration; route and goal view are illustrative, not a recorded flight"
+  },
+  {
+    "file": "uav-start.png",
+    "source": "D:/uav-research/photo-goal/tasks/city-004/start.png",
+    "bytes": 454004,
+    "sha256": "4a3875e611367123a6fe38ef547f5b94caf8eb50f030646b5f43b2b85615d21a",
+    "alterations": "none; presented as the captured start/goal task pair"
+  },
+  {
+    "file": "uav-goal.png",
+    "source": "D:/uav-research/photo-goal/tasks/city-004/goal.png",
+    "bytes": 407333,
+    "sha256": "df171bca08f69737313b16c7f4b52304dd1c39fb80c2f91d25f01474ffded93c",
+    "alterations": "none; presented as the captured start/goal task pair"
+  },
+  {
+    "file": "curi-loop-v2.svg",
+    "source": "Locally drawn from the verified CURI research workflow in content/curi-note.html and https://github.com/iamyanbo/CURI/blob/main/docs/build-story.md",
+    "alterations": "Code-native SVG; enlarged labels, directional loop, and persistent evidence record"
+  },
+  {
+    "file": "uav-reference-flight.svg",
+    "source": "D:\\uav-research\\photo-goal\\history\\before-cleanup-20260929\\artifacts\\collection-proof\\env5\\steps.jsonl",
+    "source_sha256": "fd5b02a2b6a240eea4d676817f641ce7685c31becc39f0f123c4affdca7a7344",
+    "reference_source": "D:\\uav-research\\photo-goal\\history\\before-cleanup-20260929\\artifacts\\collection-proof\\env5\\released-reference.json",
+    "result_source": "D:\\uav-research\\photo-goal\\history\\before-cleanup-20260929\\artifacts\\collection-proof\\env5\\result.json",
+    "alterations": "Matplotlib top-down path and altitude profile from 1023 recorded simulator positions; translated to the starting coordinate. No smoothing or invented motion.",
+    "caption_scope": "Earlier privileged reference flight in AerialVLN training scene 5; not the city-004 task above, a learned-policy evaluation, or a result from the current memory model."
+  },
+  {
+    "file": "gym-inspiration.png",
+    "source": "User-supplied image, 2026-10-14",
+    "sha256": "177c0ff65916ff201c8e3b4b897f54a52de8f95f5dcd375303e01328d3083f72",
+    "alterations": "none; displayed with its original black background"
+  }
+]

@@ -1,0 +1,11 @@
+<h3>Start with a pull request</h3>
+<p>Paste a merged GitHub pull-request URL into Strata. It fetches the relevant commits and compares the code before and after the change. The analysis runs on your machine; the viewer reads the resulting local file.</p>
+<h3>See what relies on the edited code</h3>
+<p>Suppose a function changes but another component still calls it. That caller may need checking even though it has no edited lines. Strata shows it beside the function, with an arrow from caller to callee and the actual line where the call occurs. Unchanged code is labelled and kept separate from the changes you need to review.</p>
+<h3>Choose how to read the change</h3>
+<ul><li><strong>By component:</strong> read a changed function or class with the code connected to it. Each item shows its own lines.</li><li><strong>By commit:</strong> see which commit added or removed each line, and how the change developed over time.</li><li><strong>By file:</strong> read every changed file, including documentation, configuration, and code that the symbol analysis does not cover.</li></ul>
+<h3>Keep notes and resume later</h3>
+<p>You can attach a note to a diff line and mark code as reviewed. Both are saved in your browser. When you load a newer snapshot, the code touched by later commits becomes unread again, so you can see what needs another look. Notes can be exported to GitHub as one review.</p>
+<h3>Current limits</h3>
+<p>The viewer currently works with merged pull requests. Function and class analysis covers TypeScript and JavaScript; other languages remain readable by file. Commit groups use time gaps, so a group may contain unrelated work. Review progress belongs to one local browser.</p>
+<p>I built the analysis pipeline and the interface. The <a href="https://github.com/iamyanbo/strata#three-lenses-over-one-pr">repository explains the implementation and setup ↗</a>.</p>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560" role="img" aria-labelledby="title desc">
+<title id="title">CURI research loop</title><desc id="desc">Ask and interpret, design an admitted test, run the study, and independently verify it. The result returns to interpretation; positive, negative and inconclusive evidence remains in the record.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="m2 1 6 4-6 4" fill="none" stroke="#315bc0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#315bc0" stroke-width="2.5" marker-end="url(#arrow)"><path d="M330 114H421"/><path d="M575 180V263"/><path d="M430 338H339"/><path d="M185 272V189"/></g>
+<g stroke="#b1bed4" stroke-width="1.4"><rect x="40" y="48" width="290" height="132" rx="8" fill="#e8efff"/><rect x="430" y="48" width="290" height="132" rx="8" fill="#f0ebfc"/><rect x="430" y="272" width="290" height="132" rx="8" fill="#eaf2fb"/><rect x="40" y="272" width="290" height="132" rx="8" fill="#fff0e7"/></g>
+<g stroke-width="4" stroke-linecap="round"><path d="M40 63v102" stroke="#315bc0"/><path d="M430 63v102" stroke="#8063c4"/><path d="M430 287v102" stroke="#5083b5"/><path d="M40 287v102" stroke="#ce794c"/></g>
+<g font-family="Georgia,serif" font-size="29" fill="#14213f" text-anchor="middle"><text x="185" y="94">Ask &amp; interpret</text><text x="575" y="94">Design a test</text><text x="575" y="318">Run the study</text><text x="185" y="318">Verify</text></g>
+<g font-family="Arial,sans-serif" font-size="21" fill="#52617a" text-anchor="middle"><text x="185" y="130">A question</text><text x="185" y="157">Competing explanations</text><text x="575" y="130">Prior evidence</text><text x="575" y="157">An admitted experiment</text><text x="575" y="354">Execute the experiment</text><text x="575" y="381">Collect the result</text><text x="185" y="354">Independent rerun</text><text x="185" y="381">Decisive checks</text></g>
+<path d="M185 404V443" fill="none" stroke="#315bc0" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="40" y="452" width="680" height="94" rx="5" fill="#f5f8ff" stroke="#b1bed4" stroke-width="1.4"/>
+<g font-family="Arial,sans-serif" fill="#14213f"><text x="65" y="490" font-size="25" font-weight="600">Evidence record</text><text x="65" y="522" font-size="20" fill="#52617a">Positive, negative, and inconclusive findings</text></g>
+<g fill="none" stroke="#9aaed0" stroke-width="1.5" stroke-dasharray="5 6"><path d="M720 497h20V24H185V40" marker-end="url(#arrow)"/></g>
+</svg>
