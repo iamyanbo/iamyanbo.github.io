@@ -130,7 +130,7 @@ for source in (root/'content/notes').glob('*.html'):
         continue
     slug=source.stem
     assert re.fullmatch(r'[a-z0-9-]+',slug), 'Invalid note slug: '+slug
-    page=source.read_text(encoding='utf-8').replace('@@STYLESHEET@@','/'+stylesheet)
+    page=source.read_text(encoding='utf-8').replace('@@STYLESHEET@@','/'+stylesheet).replace('@@VERSION@@',version)
     assert '@@' not in page, 'Unfinished note: '+source.name
     destination=out/'notes'/slug
     destination.mkdir(parents=True,exist_ok=True)

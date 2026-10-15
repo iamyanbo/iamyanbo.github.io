@@ -353,7 +353,7 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .note-intro h1{font:400 clamp(48px,6vw,76px)/1.08 var(--display);letter-spacing:-.04em;color:var(--ink);margin:22px 0}
 .note-intro .note-deck{font:400 23px/1.55 var(--display);color:var(--muted);max-width:650px}
 .note-intro .note-byline{font:400 12px/1.7 var(--sans);color:var(--muted);margin-top:22px}
-.note-milestones{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;border-block:1px solid var(--line);padding:25px 0;margin:35px 0 42px}
+.note-milestones{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;border-block:1px solid var(--line);padding:25px 0;margin:35px 0 42px}
 .note-milestones dt{font:400 clamp(28px,4vw,40px)/1.2 var(--display);color:var(--blue)}
 .note-milestones dd{font:400 12px/1.7 var(--sans);color:var(--muted);margin:10px 0 0}
 .note-prose p{font:400 17px/1.95 var(--sans);color:var(--ink);margin:0 0 24px}
@@ -364,6 +364,26 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .note-prose caption{text-align:left;font:500 13px/1.7 var(--sans);color:var(--muted);margin-bottom:12px}
 .note-prose .note-small{font-size:13px;line-height:1.8;color:var(--muted)}
 .note-footer{border-top:1px solid var(--line);border-bottom:0;padding-bottom:45px}
+.note-table-scroll{max-width:100%;overflow-x:auto;margin:24px 0;scrollbar-color:var(--blue) transparent}
+.note-table-scroll:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.note-table-scroll table{margin:0}
+.note-prose .bench-split{min-width:560px;table-layout:fixed}
+.note-prose .bench-split th,.note-prose .bench-split td{text-align:center;padding:12px 6px}
+.bench-planner{border-block:1px solid var(--line);padding:26px 0 30px;margin:36px 0}
+.bench-planner h3{font:400 28px/1.3 var(--display);margin:0 0 16px}
+.bench-planner h4{font:500 18px/1.5 var(--sans);margin:24px 0 16px}
+.bench-weights{min-width:410px;font-variant-numeric:tabular-nums}
+.bench-weights th span{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.bench-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+.bench-fields label{display:grid;gap:7px;font:500 12px/1.6 var(--sans);color:var(--muted)}
+.bench-fields input{box-sizing:border-box;min-width:0;width:100%;padding:10px 12px;border:1px solid #9db7d4;border-radius:3px;background:#f6fdff;color:var(--ink);font:400 17px/1.5 var(--sans)}
+.bench-fields input:focus-visible,.bench-planner button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.bench-planner fieldset{min-width:0;border:0;margin:22px 0;padding:0}
+.bench-planner legend{font:500 13px/1.7 var(--sans);margin-bottom:13px}
+.bench-starts{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.note-prose .bench-plan-status{font-size:16px;margin:24px 0 12px}
+.bench-planner button{border:0;border-bottom:1px solid var(--blue);padding:5px 0;background:none;color:var(--blue);font:500 13px/1.6 var(--sans);cursor:pointer}
+@media(max-width:700px){.bench-starts{grid-template-columns:repeat(2,minmax(0,1fr))}.bench-fields{gap:16px}.bench-weights th,.bench-weights td{padding:12px 10px}.note-table-scroll{margin-inline:0}}
 @media(max-width:700px){.note-article{padding:45px 22px 55px}.note-masthead,.note-footer{padding:24px 22px}.note-masthead .wordmark{font-size:15px}.note-intro .note-deck{font-size:21px}.note-milestones{gap:12px;padding:22px 0}.note-milestones dd{font-size:11px}.note-prose p{font-size:16px}.note-prose h2{font-size:28px}.note-prose table{font-size:12px}.note-footer{flex-wrap:wrap}}
 @media(min-width:701px) and (max-width:1100px){.site-header nav{gap:18px}}
 @media(min-width:701px) and (max-width:899px){
