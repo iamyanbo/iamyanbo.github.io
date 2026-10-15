@@ -16,7 +16,7 @@ for(const file of await htmlFiles()){
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length);
   for(const match of html.matchAll(/aria-labelledby="([^"]+)"/g))for(const id of match[1].split(' '))assert(ids.includes(id),'Missing accessible heading: '+id);
-  for(const match of html.matchAll(/\b(?:src|href)="([^"]+)"/g)){
+  for(const match of html.matchAll(/\b(?:src|href|poster)="([^"]+)"/g)){
     const target=match[1];
     if(target.startsWith('#'))assert(ids.includes(target.slice(1)),target);
     else if(!/^[a-z]+:/i.test(target)){

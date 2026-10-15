@@ -364,6 +364,9 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .note-prose caption{text-align:left;font:500 13px/1.7 var(--sans);color:var(--muted);margin-bottom:12px}
 .note-prose .note-small{font-size:13px;line-height:1.8;color:var(--muted)}
 .note-footer{border-top:1px solid var(--line);border-bottom:0;padding-bottom:45px}
+.note-video{max-width:560px;margin:28px auto 32px}
+.note-video video{display:block;width:100%;height:auto;background:#101b29;border-radius:4px}
+.note-video figcaption{font:400 13px/1.7 var(--sans);color:var(--muted);margin-top:12px}
 .note-table-scroll{max-width:100%;overflow-x:auto;margin:24px 0;scrollbar-color:var(--blue) transparent}
 .note-table-scroll:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 .note-table-scroll table{margin:0}
