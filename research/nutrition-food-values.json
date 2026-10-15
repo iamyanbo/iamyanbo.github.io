@@ -1,0 +1,112 @@
+{
+  "source": "USDA FoodData Central, SR Legacy, April 2018",
+  "source_url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip",
+  "retrieved": "2026-10-15",
+  "basis": "per 100 g edible food in the state named",
+  "foods": [
+    {
+      "id": 168556,
+      "description": "Catsup",
+      "protein_g": 1.04,
+      "fat_g": 0.1,
+      "carbs_g": 27.4,
+      "kcal": 101.0
+    },
+    {
+      "id": 168878,
+      "description": "Rice, white, long-grain, regular, enriched, cooked",
+      "protein_g": 2.69,
+      "fat_g": 0.28,
+      "carbs_g": 28.17,
+      "kcal": 130.0
+    },
+    {
+      "id": 169736,
+      "description": "Pasta, dry, enriched",
+      "carbs_g": 74.67,
+      "kcal": 371.0,
+      "fat_g": 1.51,
+      "protein_g": 13.04
+    },
+    {
+      "id": 170026,
+      "description": "Potatoes, flesh and skin, raw",
+      "fat_g": 0.09,
+      "kcal": 77.0,
+      "protein_g": 2.05,
+      "carbs_g": 17.49
+    },
+    {
+      "id": 171009,
+      "description": "Salad dressing, mayonnaise, regular",
+      "protein_g": 0.96,
+      "fat_g": 74.85,
+      "carbs_g": 0.57,
+      "kcal": 680.0
+    },
+    {
+      "id": 171077,
+      "description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw",
+      "fat_g": 2.62,
+      "kcal": 120.0,
+      "protein_g": 22.5,
+      "carbs_g": 0.0
+    },
+    {
+      "id": 171287,
+      "description": "Egg, whole, raw, fresh",
+      "kcal": 143.0,
+      "protein_g": 12.56,
+      "fat_g": 9.51,
+      "carbs_g": 0.72
+    },
+    {
+      "id": 171413,
+      "description": "Oil, olive, salad or cooking",
+      "fat_g": 100.0,
+      "carbs_g": 0.0,
+      "kcal": 884.0,
+      "protein_g": 0.0
+    },
+    {
+      "id": 171790,
+      "description": "Beef, ground, 95% lean meat / 5% fat, raw",
+      "protein_g": 21.41,
+      "fat_g": 5.0,
+      "carbs_g": 0.0,
+      "kcal": 137.0
+    },
+    {
+      "id": 172234,
+      "description": "Mustard, prepared, yellow",
+      "protein_g": 3.74,
+      "fat_g": 3.34,
+      "carbs_g": 5.83,
+      "kcal": 60.0
+    },
+    {
+      "id": 174030,
+      "description": "Beef, ground, 90% lean meat / 10% fat, raw",
+      "fat_g": 10.0,
+      "carbs_g": 0.0,
+      "protein_g": 20.0,
+      "kcal": 176.0
+    },
+    {
+      "id": 174036,
+      "description": "Beef, ground, 80% lean meat / 20% fat, raw",
+      "protein_g": 17.17,
+      "fat_g": 20.0,
+      "carbs_g": 0.0,
+      "kcal": 254.0
+    },
+    {
+      "id": 174523,
+      "description": "Sauce, barbecue",
+      "fat_g": 0.63,
+      "carbs_g": 40.77,
+      "kcal": 172.0,
+      "protein_g": 0.82
+    }
+  ]
+}
