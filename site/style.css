@@ -335,6 +335,21 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .curi-diagram .curi-diagram-key,.study .curi-diagram .curi-diagram-key{font:400 12px/1.8 var(--sans);color:var(--muted);text-align:center;margin:12px auto 0;max-width:440px}
 .hero-about-link{align-self:flex-start;font:500 12px/1.8 var(--sans);margin-top:25px;text-decoration:none;color:var(--muted);border-bottom:1px solid #b1c7dc;display:flex;gap:24px}
 [data-concept=combined] .personality-section{position:relative;z-index:1;background:var(--paper);margin-top:75px;padding:70px 0 60px;border-top:2px solid #7d99c6;scroll-margin-top:30px}
+[data-concept=combined] .notes-section{position:relative;z-index:1;background:var(--paper);margin-top:65px;padding:70px 0 25px;border-top:2px solid #7d99c6;scroll-margin-top:30px}
+.notes-heading h2{font:400 clamp(42px,4.5vw,60px)/1.15 var(--display);letter-spacing:-.035em;margin:20px 0}
+.notes-heading>p{font:400 16px/1.9 var(--sans);color:var(--muted);max-width:620px;margin:0 0 40px}
+.notes-topics{display:grid;grid-template-columns:1fr 1fr;gap:65px}
+.notes-topic{border-top:1px solid var(--line);padding-top:24px}
+.notes-topic h3{font:400 32px/1.25 var(--display);margin:15px 0 12px;letter-spacing:-.02em}
+.notes-topic p{font:400 15px/1.9 var(--sans);color:var(--muted);max-width:430px}
+.notes-status{font:400 12px/1.8 var(--sans);color:var(--muted);margin-top:30px}
+@media(min-width:701px) and (max-width:1100px){.site-header nav{gap:18px}}
+@media(min-width:701px) and (max-width:899px){
+  #menu-toggle{display:block;border:1px solid var(--line);background:var(--paper);padding:7px 12px;font-size:12px}
+  .site-header nav{display:none;position:absolute;top:76px;left:36px;right:36px;background:var(--paper);border:1px solid var(--line);padding:22px;gap:22px;flex-direction:column;align-items:flex-start}
+  .site-header nav.open{display:flex}
+}
+@media(max-width:700px){[data-concept=combined] .notes-section{padding:50px 0 15px;margin-top:25px}.notes-topics{grid-template-columns:1fr;gap:28px}.notes-heading>p{font-size:15px;margin-bottom:28px}}
 .personality-heading h2{font:400 clamp(38px,4.5vw,60px)/1.15 var(--display);letter-spacing:-.035em;margin:20px 0 45px}
 .personality-grid{display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:center}
 .personality-copy{max-width:580px}

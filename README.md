@@ -16,6 +16,7 @@ No package installation is needed to build it.
 | DifficultyPainting chart | `content/difficulty-results.html` |
 | CURI case study | `content/curi-case-study.html`, `content/curi-findings.html` |
 | About me, gym schedule, and playlists | `content/personality.html` |
+| Personal blog topics and post links | `content/notes-section.html` |
 | Styles and attractor animation | `site/` |
 | Images and resume | `assets/` |
 

@@ -13,7 +13,7 @@ def revise_portfolio(html, root: Path):
     change('<a href="https://iamyanbo.github.io/llm-notes/">Read the essays <span aria-hidden="true">↗</span></a>', '<a href="#essays">Personal projects <span aria-hidden="true">↘</span></a>')
     change('I study how models represent language and the visual world. I build experiments and interactive explanations to understand them.',
            'A place to showcase the interesting work and projects I’ve built, and to explore models and the mathematics behind them.')
-    change('<a href="#essays">Essays</a><a href="#about">About</a>', '<a href="#essays">Personal projects</a><a href="#about">About me</a>')
+    change('<a href="#essays">Essays</a><a href="#about">About</a>', '<a href="#essays">Personal projects</a><a href="#notes">Notes</a><a href="#about">About me</a>')
     change('Questions I’m working on.', 'Current Research')
     change('<p>Visual prediction, decisions from learned representations, and the experiments that test them.</p>', '')
     change('Can a model predict what a drone will see next?', 'Long Horizon Planning for UAV Navigation')
@@ -55,7 +55,7 @@ def revise_portfolio(html, root: Path):
            'A pull request can change a function while leaving its callers untouched. I wanted to see those callers beside the edit, rather than search for them in another file. Strata brings the dependency graph into the review and lets me read the same change by component, by commit, or by file.</p><p>I can follow a call to the exact line that uses the function, leave a note, and mark the code as reviewed. If I load a later snapshot, Strata marks the code touched by new commits as unread, so I can pick up where I left off.')
     about = '<template id="case-about">'+(root/'content/about.html').read_text(encoding='utf-8')+'</template>'
     html = re.sub(r'<section class="about-section".*?</section>', '', html, flags=re.S)
-    html = html.replace('</main>', (root/'content/personality.html').read_text(encoding='utf-8')+'</main>')
+    html = html.replace('</main>', (root/'content/notes-section.html').read_text(encoding='utf-8')+(root/'content/personality.html').read_text(encoding='utf-8')+'</main>')
     change('<a href="#essays">Personal projects <span aria-hidden="true">↘</span></a></div>', '<a href="#essays">Personal projects <span aria-hidden="true">↘</span></a></div><a class="hero-about-link" href="#about">A little about me <span aria-hidden="true">↘</span></a>')
     change('<img src="assets/curi-loop-v2.svg" width="760" height="560" alt="CURI\'s research loop: ask a question, admit an experiment, execute it, independently check it, and interpret the result before another experiment." loading="lazy">', (root/'content/curi-process.html').read_text(encoding='utf-8'))
     html = re.sub(r'<template id="case-point-painting">.*?</template>', lambda _: '<template id="case-point-painting">'+(root/'content/difficulty-note.html').read_text(encoding='utf-8')+'</template>', html, flags=re.S)
