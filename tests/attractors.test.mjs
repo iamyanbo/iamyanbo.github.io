@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {ATTRACTORS,integrateAttractor,resampleTrajectory} from '../site/attractors.js';
-import {sectionPosition,sceneWeights,ribbonData,alternatingSide,transportData,transport3DData,framing} from '../site/attractor-scene.js';
+import {sectionPosition,sceneWeights,ribbonData,alternatingSide,sceneExitY,transportData,transport3DData,framing} from '../site/attractor-scene.js';
 import {rk4} from '../site/dynamics.js';
 test('all displayed attractors remain finite, resolved, and correctly normalized',()=>{
   for(const definition of ATTRACTORS){
@@ -50,6 +50,24 @@ test('six work entries each show a distinct system and continue to alternate sid
   assert.equal(sceneWeights(3.5).from,3);assert.equal(sceneWeights(3.5).to,4);
   assert.equal(sceneWeights(5.5).to,0);
   assert.deepEqual([0,1,2,3,4,5].map(alternatingSide),[0,1,0,1,0,1]);
+});
+
+test('the final drawing and label scroll clear of the personal section without a jump',()=>{
+  const center=340,scale=220,clearance=105,release=center+scale+clearance;
+  assert.equal(sceneExitY(center,scale,release+200,clearance),center);
+  assert.equal(sceneExitY(center,scale,Infinity,clearance),center);
+  for(const extent of [145,220,310]){
+    let previous=sceneExitY(center,extent,900,clearance);
+    for(let boundary=899;boundary>=-500;boundary--){
+      const y=sceneExitY(center,extent,boundary,clearance);
+      assert(y+extent+clearance<=boundary,'The shape and its label must stay above the next section.');
+      assert(previous-y>=0&&previous-y<=1.000001,'Leaving must follow the scroll without jumping.');
+      assert.equal(sceneExitY(center,extent,boundary+1,clearance),previous,'Scrolling back must retrace the exit.');
+      previous=y;
+    }
+  }
+  assert.equal(sceneExitY(center,scale,release,clearance),center);
+  assert.equal(sceneExitY(center,scale,release-1,clearance),center-1);
 });
 test('particle handoffs preserve both endpoint point sets and match spatial regions',()=>{
   const a=[[-.8,-.6,0],[.6,.7,.5],[.1,-.5,1]],b=[a[2],a[0],a[1]];

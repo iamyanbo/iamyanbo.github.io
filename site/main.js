@@ -1,6 +1,6 @@
 import {lorenzTrajectory,waveHeight} from './dynamics.js';
 import {ATTRACTORS} from './attractors.js';
-import {createScene,sectionPosition,alternatingSide} from './attractor-scene.js';
+import {createScene,sectionPosition,alternatingSide,sceneExitY} from './attractor-scene.js';
 import {smoothstep} from './attractors.js';
 const canvas=document.querySelector('#system-canvas');
 const mode=document.body.dataset.concept,reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,6 +13,8 @@ let scene=null,heldAttractor=null,shapePosition=0,shapeTarget=0,heroBlend=0;
 let anchors=[],heroEnd=0,available=1,lastName='',lastPercent=-1,metricsAt=0,metricsFrames=0,metricsDraw=0;
 let sceneRows=[],sceneView=null,layoutPosition=0,viewHero=0;
 const panels=[...document.querySelectorAll('[data-scene]')],railLabel=document.querySelector('.attractor-rail');
+const personalSection=document.querySelector('#notes,.personality-section');
+let personalTop=Infinity,exitClearance=100;
 const names=[...document.querySelectorAll('[data-attractor-name]')];
 const bar=document.querySelector('#reading-progress'),scrollValue=document.querySelector('#scroll-value');
 document.querySelectorAll('[data-attractor]').forEach(control=>control.addEventListener('click',()=>{
@@ -26,6 +28,8 @@ function size(){
   if(scene)scene.resize(width,height,dpr);
   if(ctx){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);}
   available=Math.max(1,document.documentElement.scrollHeight-height);
+  personalTop=personalSection?personalSection.getBoundingClientRect().top+scrollY:Infinity;
+  exitClearance=(railLabel?.getBoundingClientRect().height??0)+42;
   sceneRows=panels.map(el=>{
     const body=el.querySelector('.project-body,.essay-body,.engineering-body').getBoundingClientRect();
     return {top:el.getBoundingClientRect().top+scrollY,bodyTop:body.top+scrollY,bodyBottom:body.bottom+scrollY,window:el.querySelector('.scene-window').getBoundingClientRect().top+scrollY};
@@ -155,6 +159,7 @@ function draw(){
       sceneView.y=inWork?workY:height*.74-scrollY;
       sceneView.scale=inWork?workScale:heroScale;
     }
+    sceneView.y=sceneExitY(sceneView.y,sceneView.scale,personalTop-scrollY,exitClearance);
     scene.draw(sceneView,shapePosition,time);
     if(railLabel){railLabel.style.transform='translate3d('+(sceneView.x-150)+'px,'+(sceneView.y+sceneView.scale+18)+'px,0)';railLabel.style.opacity=String(t);}
     const index=Math.max(0,Math.round(shapePosition))%ATTRACTORS.length,name=ATTRACTORS[index].name;

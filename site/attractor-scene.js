@@ -28,6 +28,10 @@ export function alternatingSide(position){
   const p=Math.max(0,position),from=Math.floor(p),blend=p-from;
   return from%2+(from%2===0?1:-1)*blend;
 }
+export function sceneExitY(center,scale,boundary,clearance=100){
+  // Release the pinned drawing before the following full-width section reaches it.
+  return Math.min(center,boundary-scale-clearance);
+}
 export function ribbonData(points){
   const count=points.length/3,result=new Float32Array((count-1)*6*9);
   let cursor=0;
