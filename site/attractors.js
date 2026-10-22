@@ -35,3 +35,9 @@ export function resampleTrajectory(points,count=6000,frame){
   return result.map(p=>p.map((v,j)=>(v-center[j])/scale));
 }
 export const smoothstep=t=>t*t*(3-2*t);
+const normals=new Map();
+// The normalization the build bakes into the curves; computed once per system in the browser.
+export function normalFrame(definition){
+  if(!normals.has(definition))normals.set(definition,trajectoryFrame(integrateAttractor(definition)));
+  return normals.get(definition);
+}

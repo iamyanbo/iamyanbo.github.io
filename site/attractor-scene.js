@@ -1,5 +1,6 @@
 import {ATTRACTORS,POINT_COUNT,smoothstep} from './attractors.js';
-import {TRACER_COLORS,TRACE_STEPS,TRACE_STRIDE,RIBBON_STRIDE,trajectoryLength,fillTracers,fillTraceRibbon} from './tracers.js';
+import {DUST_CAPACITY} from './dust.js';
+import {TRACER_COLORS,TRACE_STEPS,TRACE_STRIDE,RIBBON_STRIDE,trajectoryLength,fillTracers,fillTraceRibbon,traceHandoff} from './tracers.js';
 const SYSTEM_COUNT=ATTRACTORS.length;
 const palettes=[
   [[.09,.29,.75],[.55,.25,.76],[.87,.40,.28]],
@@ -42,17 +43,28 @@ export function ribbonData(points){
   }
   return result;
 }
+// Near points draw larger; the shapes turn slowly so their depth is visible.
+const PERSPECTIVE=.2,SPIN=.11;
 const cameras=[[-.38,.38],[-.35,1.0],[.3,.75],[-.35,.58],[.6,.72],[-.38,.4]];
-function projectPoint(x,y,z,yaw,pitch){
+export function orbit(index,time,view={}){
+  return [cameras[index][0]+(view.spin??time)*SPIN+(view.tiltX??0),cameras[index][1]+Math.sin(time*.05)*.05+(view.tiltY??0)];
+}
+export function projectPoint(x,y,z,yaw,pitch){
   const c=Math.cos(yaw),s=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
-  const a=x*c-y*s,b=x*s+y*c,factor=1+.08*(b*cp+z*sp);
+  const a=x*c-y*s,b=x*s+y*c,factor=1+PERSPECTIVE*(b*cp+z*sp);
   return [a*factor,(b*sp-z*cp)*factor];
+}
+// The state that projects to (px,py) at a chosen depth along the view direction.
+export function unprojectPoint(px,py,depth,yaw,pitch){
+  const c=Math.cos(yaw),s=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),f=1+PERSPECTIVE*depth;
+  const a=px/f,v=py/f,b=v*sp+depth*cp,z=-v*cp+depth*sp;
+  return [a*c+b*s,-a*s+b*c,z];
 }
 export function framing(points,index){
   const [yaw,pitch]=cameras[index];let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
-  // Fit the gentle orbit once. Rotating never makes the shape invade the prose column.
-  for(let pose=0;pose<24;pose++)for(const tilt of [-.06,.06])for(let i=0;i<points.length;i+=9){
-    const [x,y]=projectPoint(points[i],points[i+1],points[i+2],yaw-.28+pose*.56/23,pitch+tilt);
+  // Fit every angle of the full turn once, so rotating never invades the prose column.
+  for(let pose=0;pose<48;pose++)for(const tilt of [-.1,.1])for(let i=0;i<points.length;i+=9){
+    const [x,y]=projectPoint(points[i],points[i+1],points[i+2],yaw+pose*Math.PI/24,pitch+tilt);
     minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
   }
   return {yaw,pitch,x:(minX+maxX)/2,y:(minY+maxY)/2,scale:1.75/Math.max(maxX-minX,maxY-minY)};
@@ -102,19 +114,24 @@ uniform vec2 uOriginAngles; uniform vec2 uDestinationAngles;
 uniform vec3 uOriginFrame; uniform vec3 uDestinationFrame;
 varying float vAlong;
 varying float vColorPosition;
+varying float vFlight;
 vec2 projected(vec3 p,vec2 angles,vec3 frame){
   float c=cos(angles.x),s=sin(angles.x),cp=cos(angles.y),sp=sin(angles.y);
   float a=p.x*c-p.y*s,b=p.x*s+p.y*c;
-  vec2 q=vec2(a,b*sp-p.z*cp)*(1.+.08*(b*cp+p.z*sp));
+  vec2 q=vec2(a,b*sp-p.z*cp)*(1.+${PERSPECTIVE}*(b*cp+p.z*sp));
   return (q-frame.xy)*frame.z;
 }
 void main(){
-  vec2 p=mix(projected(aOrigin,uOriginAngles,uOriginFrame),projected(aDestination,uDestinationAngles,uDestinationFrame),uBlend);
+  float local=clamp(uBlend*1.6-aAlong.x*.6,0.,1.);
+  local=local*local*local*(local*(local*6.-15.)+10.);
+  vec2 a=projected(aOrigin,uOriginAngles,uOriginFrame),b=projected(aDestination,uDestinationAngles,uDestinationFrame);
+  float flight=sin(3.14159*local);
+  vec2 p=mix(a,b,local)+vec2(-(b-a).y,(b-a).x)*flight*.28;
   vec2 pixel=uCenter+p*uScale;
   gl_Position=vec4(pixel.x/uViewport.x*2.-1.,1.-pixel.y/uViewport.y*2.,0.,1.);
-  gl_PointSize=2.4*uDpr;
-  vAlong=mix(aAlong.x,aAlong.y,uBlend);
-  vec3 state=mix(aOrigin,aDestination,uBlend);
+  gl_PointSize=(2.2+flight*2.2)*uDpr;
+  vAlong=mix(aAlong.x,aAlong.y,local);vFlight=flight;
+  vec3 state=mix(aOrigin,aDestination,local);
   vColorPosition=.5+.5*(state.z*.7+state.x*.3);
 }`;
 const particleFragment=`
@@ -122,12 +139,13 @@ precision mediump float;
 uniform float uOpacity; uniform float uTime; uniform vec3 uColorA; uniform vec3 uColorB; uniform vec3 uColorC;
 varying float vAlong;
 varying float vColorPosition;
+varying float vFlight;
 ${colorFunction}
 void main(){
   float r=length(gl_PointCoord-vec2(.5))*2.;
-  float edge=1.-smoothstep(.45,1.,r);
+  float edge=1.-smoothstep(.2,1.,r);
   float trail=1.-smoothstep(.0,.18,fract(uTime*.075-vAlong*3.));
-  gl_FragColor=vec4(pointColor(vColorPosition),edge*uOpacity*(.62+trail*.3));
+  gl_FragColor=vec4(pointColor(vColorPosition),edge*uOpacity*(.62+trail*.3+vFlight*.9));
 }`;
 const tracerVertex=`
 attribute vec3 aOrigin; attribute vec3 aDestination; attribute vec3 aColor; attribute vec3 aStyle;
@@ -138,14 +156,18 @@ varying vec3 vColor; varying float vOpacity; varying float vSize;
 vec2 projected(vec3 p,vec2 angles,vec3 frame){
   float c=cos(angles.x),s=sin(angles.x),cp=cos(angles.y),sp=sin(angles.y);
   float a=p.x*c-p.y*s,b=p.x*s+p.y*c;
-  return (vec2(a,b*sp-p.z*cp)*(1.+.08*(b*cp+p.z*sp))-frame.xy)*frame.z;
+  return (vec2(a,b*sp-p.z*cp)*(1.+${PERSPECTIVE}*(b*cp+p.z*sp))-frame.xy)*frame.z;
+}
+float depthOf(vec3 p,vec2 angles){
+  return (p.x*sin(angles.x)+p.y*cos(angles.x))*cos(angles.y)+p.z*sin(angles.y);
 }
 void main(){
+  float near=clamp(mix(depthOf(aOrigin,uOriginAngles),depthOf(aDestination,uDestinationAngles),uBlend)*.45+.5,0.,1.);
   vec2 p=mix(projected(aOrigin,uOriginAngles,uOriginFrame),projected(aDestination,uDestinationAngles,uDestinationFrame),uBlend);
   vec2 pixel=uCenter+p*uScale;
   gl_Position=vec4(pixel.x/uViewport.x*2.-1.,1.-pixel.y/uViewport.y*2.,0.,1.);
-  gl_PointSize=aStyle.z*uDpr;
-  vColor=aColor;vOpacity=mix(aStyle.x,aStyle.y,uBlend);vSize=aStyle.z;
+  gl_PointSize=aStyle.z*uDpr*(.7+.6*near);
+  vColor=aColor;vOpacity=mix(aStyle.x,aStyle.y,uBlend)*(.45+.55*near);vSize=aStyle.z;
 }`;
 const tracerFragment=`
 precision mediump float;
@@ -156,23 +178,28 @@ void main(){
   float core=1.-smoothstep(.57,.72,r);
   float halo=(1.-smoothstep(.72,1.,r))*.18;
   vec3 color=vColor;
-  if(vSize>10.)color=mix(color,vec3(1.),smoothstep(.54,.70,r)*.85);
+  if(vSize>10.){
+    core=1.-smoothstep(.24,.32,r);
+    color=r<.30?mix(color,vec3(1.),smoothstep(.20,.28,r)*.9):vColor;
+    halo=exp(-r*r*7.)*.42;
+  }
   gl_FragColor=vec4(color,max(core,halo)*vOpacity*uOpacity);
 }`;
 const trailVertex=tracerVertex
   .replace('attribute vec3 aOrigin;', 'attribute vec3 aNextOrigin; attribute vec3 aNextDestination; attribute float aSide; attribute vec3 aOrigin;')
-  .replace('varying vec3 vColor;', 'varying float vSide; varying vec3 vColor;')
+  .replace('varying vec3 vColor;', 'uniform float uWidthScale; varying float vSide; varying vec3 vColor;')
   .replace('vec2 pixel=uCenter+p*uScale;', `
   vec2 q=mix(projected(aNextOrigin,uOriginAngles,uOriginFrame),projected(aNextDestination,uDestinationAngles,uDestinationFrame),uBlend);
   vec2 direction=normalize(q-p+vec2(.000001));
-  vec2 pixel=uCenter+p*uScale+vec2(-direction.y,direction.x)*aSide*aStyle.z;
+  vec2 pixel=uCenter+p*uScale+vec2(-direction.y,direction.x)*aSide*aStyle.z*uWidthScale*(.5+1.*near);
   vSide=aSide;`);
 const trailFragment=`
 precision mediump float;
-uniform float uOpacity;
+uniform float uOpacity; uniform float uGlow;
 varying vec3 vColor; varying float vOpacity; varying float vSide;
 void main(){
-  float edge=1.-smoothstep(.48,1.,abs(vSide));
+  // The glow pass is a wide, soft-edged copy of the trail drawn underneath it.
+  float edge=mix(1.-smoothstep(.48,1.,abs(vSide)),pow(1.-abs(vSide),2.2),uGlow);
   gl_FragColor=vec4(vColor,edge*vOpacity*uOpacity);
 }`;
 const vertex=`
@@ -184,7 +211,7 @@ varying float vColorPosition;
 vec3 project(vec3 p){
   float c=cos(uYaw),s=sin(uYaw),cp=cos(uPitch),sp=sin(uPitch);
   vec3 q=vec3(p.x*c-p.y*s,(p.x*s+p.y*c)*sp-p.z*cp,(p.x*s+p.y*c)*cp+p.z*sp);
-  q.xy*=1.0+q.z*.08; return q;
+  q.xy*=1.0+q.z*${PERSPECTIVE}; return q;
 }
 void main(){
   vec3 a=project(aStart),b=project(aEnd),p=mix(a,b,aEdge.x);
@@ -198,7 +225,7 @@ void main(){
 }`;
 const fragment=`
 precision mediump float;
-uniform float uTime; uniform float uOpacity; uniform vec3 uColorA; uniform vec3 uColorB; uniform vec3 uColorC;
+uniform float uTime; uniform float uOpacity; uniform float uReveal; uniform vec3 uColorA; uniform vec3 uColorB; uniform vec3 uColorC;
 varying float vSide; varying float vAlong; varying float vDepth;
 varying float vColorPosition;
 ${colorFunction}
@@ -206,8 +233,10 @@ void main(){
   float trail=1.0-smoothstep(.0,.18,fract(uTime*.075-vAlong*3.0));
   float edge=1.0-smoothstep(.48,1.0,abs(vSide));
   float depth=clamp(vDepth*.35+.55,.15,1.);
-  vec3 color=vec3(.25,.39,.61);
-  gl_FragColor=vec4(color,edge*uOpacity*(.32+depth*.28+trail*.40));
+  vec3 color=mix(vec3(.25,.39,.61),pointColor(vColorPosition),.5+depth*.25);
+  float drawn=1.-smoothstep(uReveal-.015,uReveal,vAlong);
+  float tip=exp(-abs(vAlong-uReveal)*140.)*step(uReveal,.999)*step(.001,uReveal)*3.;
+  gl_FragColor=vec4(color,edge*uOpacity*((.30+depth*.38+trail*.40)*drawn+tip));
 }`;
 function shader(gl,type,code){
   const s=gl.createShader(type);gl.shaderSource(s,code);gl.compileShader(s);
@@ -244,7 +273,7 @@ export async function createScene(canvas){
     const next=(index+1)%SYSTEM_COUNT,buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,transport3DData(bank[index],bank[next],points,projected[next]),gl.STATIC_DRAW);return buffer;
   });
   const attributes=['aStart','aEnd','aEdge'].map(name=>gl.getAttribLocation(program,name));
-  const uniforms=Object.fromEntries(['Viewport','Center','Scale','Yaw','Pitch','Width','Time','Opacity','ColorA','ColorB','ColorC'].map(name=>[name,gl.getUniformLocation(program,'u'+name)]));
+  const uniforms=Object.fromEntries(['Viewport','Center','Scale','Yaw','Pitch','Width','Time','Opacity','Reveal','ColorA','ColorB','ColorC'].map(name=>[name,gl.getUniformLocation(program,'u'+name)]));
   const tracers=gl.createProgram();
   gl.attachShader(tracers,shader(gl,gl.VERTEX_SHADER,tracerVertex));gl.attachShader(tracers,shader(gl,gl.FRAGMENT_SHADER,tracerFragment));gl.linkProgram(tracers);
   if(!gl.getProgramParameter(tracers,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(tracers));
@@ -254,20 +283,76 @@ export async function createScene(canvas){
   gl.attachShader(trails,shader(gl,gl.VERTEX_SHADER,trailVertex));gl.attachShader(trails,shader(gl,gl.FRAGMENT_SHADER,trailFragment));gl.linkProgram(trails);
   if(!gl.getProgramParameter(trails,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(trails));
   const trailAttributes=['aOrigin','aDestination','aColor','aStyle','aNextOrigin','aNextDestination','aSide'].map(name=>gl.getAttribLocation(trails,name));
-  const trailUniforms=Object.fromEntries(['Viewport','Center','Scale','Blend','Opacity','OriginAngles','DestinationAngles','OriginFrame','DestinationFrame'].map(name=>[name,gl.getUniformLocation(trails,'u'+name)]));
+  const trailUniforms=Object.fromEntries(['Viewport','Center','Scale','Blend','Opacity','WidthScale','Glow','OriginAngles','DestinationAngles','OriginFrame','DestinationFrame'].map(name=>[name,gl.getUniformLocation(trails,'u'+name)]));
   const trailData=new Float32Array(TRACER_COLORS.length*TRACE_STEPS*4*RIBBON_STRIDE),trailRanges=[],trailBuffer=gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER,trailBuffer);gl.bufferData(gl.ARRAY_BUFFER,trailData.byteLength,gl.DYNAMIC_DRAW);
   const traceData=new Float32Array(TRACER_COLORS.length*TRACE_STEPS*TRACE_STRIDE),traceBuffer=gl.createBuffer();
+  const dustData=new Float32Array(DUST_CAPACITY*TRACE_STRIDE),dustBuffer=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,dustBuffer);gl.bufferData(gl.ARRAY_BUFFER,dustData.byteLength,gl.DYNAMIC_DRAW);
+  const stepLengths=bank.map(points=>trajectoryLength(points)/28000);
   gl.bindBuffer(gl.ARRAY_BUFFER,traceBuffer);gl.bufferData(gl.ARRAY_BUFFER,traceData.byteLength,gl.DYNAMIC_DRAW);
   // Store premultiplied RGB with full coverage alpha for canvas compositing.
   gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
   canvas.dataset.renderer='webgl';
+  function drawTraces(view,time,from,to,blend,opacity,count){
+    if(opacity<.002)return;
+    fillTraceRibbon(traceData,trailData,trailRanges,count);
+    gl.useProgram(trails);gl.bindBuffer(gl.ARRAY_BUFFER,trailBuffer);
+    const trailCount=trailRanges.at(-1).reduce((a,b)=>a+b,0);
+    gl.bufferSubData(gl.ARRAY_BUFFER,0,trailData.subarray(0,trailCount*RIBBON_STRIDE));
+    trailAttributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,i===6?1:3,gl.FLOAT,false,RIBBON_STRIDE*4,i*12);});
+    gl.uniform2f(trailUniforms.Viewport,view.width,view.height);gl.uniform2f(trailUniforms.Center,view.x,view.y);
+    gl.uniform1f(trailUniforms.Scale,view.scale);gl.uniform1f(trailUniforms.Blend,blend);
+    for(const [prefix,index] of [['Origin',from],['Destination',to]]){
+      const frame=frames[index];
+      gl.uniform2f(trailUniforms[prefix+'Angles'],...orbit(index,time,view));
+      gl.uniform3f(trailUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);
+    }
+    for(const [widthScale,glow,alpha] of [[6,1,.16],[1,0,1]]){
+      gl.uniform1f(trailUniforms.WidthScale,widthScale);gl.uniform1f(trailUniforms.Glow,glow);gl.uniform1f(trailUniforms.Opacity,opacity*alpha);
+      for(const [first,length] of trailRanges)gl.drawArrays(gl.TRIANGLE_STRIP,first,length);
+    }
+    trailAttributes.forEach(a=>gl.disableVertexAttribArray(a));
+    gl.useProgram(tracers);gl.bindBuffer(gl.ARRAY_BUFFER,traceBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER,0,traceData.subarray(0,count*TRACE_STEPS*TRACE_STRIDE));
+    tracerAttributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,48,i*12);});
+    gl.uniform2f(tracerUniforms.Viewport,view.width,view.height);gl.uniform2f(tracerUniforms.Center,view.x,view.y);
+    gl.uniform1f(tracerUniforms.Scale,view.scale);gl.uniform1f(tracerUniforms.Blend,blend);
+    gl.uniform1f(tracerUniforms.Dpr,canvas.width/view.width);gl.uniform1f(tracerUniforms.Opacity,opacity);
+    for(const [prefix,index] of [['Origin',from],['Destination',to]]){
+      const frame=frames[index];
+      gl.uniform2f(tracerUniforms[prefix+'Angles'],...orbit(index,time,view));
+      gl.uniform3f(tracerUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);
+    }
+    for(let tracer=0;tracer<count;tracer++)gl.drawArrays(gl.POINTS,(tracer+1)*TRACE_STEPS-1,1);
+    tracerAttributes.forEach(a=>gl.disableVertexAttribArray(a));
+  }
+  function drawPoints(view,time,index,data,count,opacity){
+    if(!count||opacity<.002)return;
+    gl.useProgram(tracers);gl.bindBuffer(gl.ARRAY_BUFFER,dustBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER,0,data.subarray(0,count*TRACE_STRIDE));
+    tracerAttributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,48,i*12);});
+    gl.uniform2f(tracerUniforms.Viewport,view.width,view.height);gl.uniform2f(tracerUniforms.Center,view.x,view.y);
+    gl.uniform1f(tracerUniforms.Scale,view.scale);gl.uniform1f(tracerUniforms.Blend,0);
+    gl.uniform1f(tracerUniforms.Dpr,canvas.width/view.width);gl.uniform1f(tracerUniforms.Opacity,opacity);
+    const frame=frames[index],angles=orbit(index,time,view);
+    for(const prefix of ['Origin','Destination']){gl.uniform2f(tracerUniforms[prefix+'Angles'],...angles);gl.uniform3f(tracerUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);}
+    gl.drawArrays(gl.POINTS,0,count);
+    tracerAttributes.forEach(a=>gl.disableVertexAttribArray(a));
+  }
   return {resize(width,height,dpr){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);gl.viewport(0,0,canvas.width,canvas.height);},
+    stepLength(index){return stepLengths[index];},
+    unproject(view,time,index,x,y,depth){
+      const frame=frames[index],[yaw,pitch]=orbit(index,time,view),unit=view.scale*frame.scale;
+      return unprojectPoint((x-view.x)/unit+frame.x,(y-view.y)/unit+frame.y,depth,yaw,pitch);
+    },
     draw(view,position,time){
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(program);
       gl.uniform2f(uniforms.Viewport,view.width,view.height);
       gl.uniform1f(uniforms.Width,.85);gl.uniform1f(uniforms.Time,time);
+      const reveal=view.reveal??1,arrive=view.arrive??Math.max(0,Math.min(1,(reveal-.35)/.65));
+      gl.uniform1f(uniforms.Reveal,reveal);
       const w=sceneWeights(position);
       const t=position-Math.floor(position),bridge=Math.sin(Math.PI*t);
       for(const [index,opacity] of [[w.from,w.a*(1-bridge)],[w.to,w.b*(1-bridge)]]){
@@ -276,11 +361,11 @@ export async function createScene(canvas){
         gl.uniform3fv(uniforms.ColorA,palettes[index][0]);gl.uniform3fv(uniforms.ColorB,palettes[index][1]);
         gl.uniform3fv(uniforms.ColorC,palettes[index][2]);
         gl.uniform2f(uniforms.Center,view.x-frame.x*scale,view.y-frame.y*scale);
-        gl.uniform1f(uniforms.Scale,scale);gl.uniform1f(uniforms.Yaw,frame.yaw+Math.sin(time*.07)*.28);
-        gl.uniform1f(uniforms.Pitch,frame.pitch+Math.sin(time*.05)*.06);
+        gl.uniform1f(uniforms.Scale,scale);const [yaw,pitch]=orbit(index,time,view);
+        gl.uniform1f(uniforms.Yaw,yaw);gl.uniform1f(uniforms.Pitch,pitch);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffers[index]);
         attributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,36,i*12);});
-        gl.uniform1f(uniforms.Opacity,opacity*view.opacity*.22);gl.drawArrays(gl.TRIANGLES,0,(POINT_COUNT-1)*6);
+        gl.uniform1f(uniforms.Opacity,opacity*view.opacity*(view.guide??1)*.22);gl.drawArrays(gl.TRIANGLES,0,(POINT_COUNT-1)*6);
       }
       if(bridge>.001&&w.from!==w.to){
         gl.useProgram(particles);gl.bindBuffer(gl.ARRAY_BUFFER,transports[w.from]);
@@ -292,7 +377,7 @@ export async function createScene(canvas){
         gl.uniform1f(particleUniforms.Dpr,canvas.width/view.width);gl.uniform1f(particleUniforms.Time,time);
         for(const [prefix,index] of [['Origin',w.from],['Destination',w.to]]){
           const frame=frames[index];
-          gl.uniform2f(particleUniforms[prefix+'Angles'],frame.yaw+Math.sin(time*.07)*.28,frame.pitch+Math.sin(time*.05)*.06);
+          gl.uniform2f(particleUniforms[prefix+'Angles'],...orbit(index,time,view));
           gl.uniform3f(particleUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);
         }
         const color=(channel)=>palettes[w.from][channel].map((value,j)=>value+(palettes[w.to][channel][j]-value)*t);
@@ -303,34 +388,14 @@ export async function createScene(canvas){
       }
       // Independent coloured histories retain the shape, with small moving heads.
       attributes.forEach(a=>gl.disableVertexAttribArray(a));
-      fillTracers(traceBank[w.from],traceBank[w.to],time,rates[w.from],rates[w.to],traceData);
-      fillTraceRibbon(traceData,trailData,trailRanges);
-      gl.useProgram(trails);gl.bindBuffer(gl.ARRAY_BUFFER,trailBuffer);
-      const trailCount=trailRanges.at(-1).reduce((a,b)=>a+b,0);
-      gl.bufferSubData(gl.ARRAY_BUFFER,0,trailData.subarray(0,trailCount*RIBBON_STRIDE));
-      trailAttributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,i===6?1:3,gl.FLOAT,false,RIBBON_STRIDE*4,i*12);});
-      gl.uniform2f(trailUniforms.Viewport,view.width,view.height);gl.uniform2f(trailUniforms.Center,view.x,view.y);
-      gl.uniform1f(trailUniforms.Scale,view.scale);gl.uniform1f(trailUniforms.Blend,t);gl.uniform1f(trailUniforms.Opacity,view.opacity);
-      for(const [prefix,index] of [['Origin',w.from],['Destination',w.to]]){
-        const frame=frames[index];
-        gl.uniform2f(trailUniforms[prefix+'Angles'],frame.yaw+Math.sin(time*.07)*.28,frame.pitch+Math.sin(time*.05)*.06);
-        gl.uniform3f(trailUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);
+      const handoff=traceHandoff(t);
+      // The opening's live tracers stand in for Lorenz's ambient ones until the first scroll handoff.
+      if(view.live&&w.from===0&&handoff.blend===0){view.live.fill(traceData);drawTraces(view,time,0,0,0,view.opacity*handoff.opacity,TRACER_COLORS.length);}
+      else{
+        fillTracers(traceBank[w.from],traceBank[w.to],time,rates[w.from],rates[w.to],traceData);
+        drawTraces(view,time,w.from,w.to,handoff.blend,view.opacity*arrive*handoff.opacity,TRACER_COLORS.length);
       }
-      for(const [first,count] of trailRanges)gl.drawArrays(gl.TRIANGLE_STRIP,first,count);
-      trailAttributes.forEach(a=>gl.disableVertexAttribArray(a));
-      gl.useProgram(tracers);gl.bindBuffer(gl.ARRAY_BUFFER,traceBuffer);
-      gl.bufferSubData(gl.ARRAY_BUFFER,0,traceData);
-      tracerAttributes.forEach((a,i)=>{gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,48,i*12);});
-      gl.uniform2f(tracerUniforms.Viewport,view.width,view.height);gl.uniform2f(tracerUniforms.Center,view.x,view.y);
-      gl.uniform1f(tracerUniforms.Scale,view.scale);gl.uniform1f(tracerUniforms.Blend,t);
-      gl.uniform1f(tracerUniforms.Dpr,canvas.width/view.width);gl.uniform1f(tracerUniforms.Opacity,view.opacity);
-      for(const [prefix,index] of [['Origin',w.from],['Destination',w.to]]){
-        const frame=frames[index];
-        gl.uniform2f(tracerUniforms[prefix+'Angles'],frame.yaw+Math.sin(time*.07)*.28,frame.pitch+Math.sin(time*.05)*.06);
-        gl.uniform3f(tracerUniforms[prefix+'Frame'],frame.x,frame.y,frame.scale);
-      }
-      for(let tracer=0;tracer<TRACER_COLORS.length;tracer++)gl.drawArrays(gl.POINTS,(tracer+1)*TRACE_STEPS-1,1);
-      tracerAttributes.forEach(a=>gl.disableVertexAttribArray(a));
+      if(view.dust&&bridge<.001)drawPoints(view,time,view.dust.index,dustData,view.dust.fill(dustData),view.opacity);
     }};
 }
 function createFallback(canvas,bank,frames,rates,traceBank){
@@ -353,7 +418,7 @@ function createFallback(canvas,bank,frames,rates,traceBank){
   });
   const projected=bank.map((points,index)=>framedPoints(points,index,frames[index])),transports=projected.map((points,i)=>transportData(points,projected[(i+1)%SYSTEM_COUNT]));
   canvas.dataset.renderer='canvas-fallback';
-  return {resize(width,height,dpr){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);},
+  return {stepLength(){return 1;},unproject(){return null;},resize(width,height,dpr){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);},
     draw(view,position,time){
       ctx.clearRect(0,0,view.width,view.height);ctx.save();ctx.translate(view.x,view.y);ctx.scale(view.scale,view.scale);
       // Cached paths keep the fallback inexpensive; its orbit is in the display plane.

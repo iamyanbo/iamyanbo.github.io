@@ -33,7 +33,7 @@ export function fillTracers(a,b,time,rateA,rateB,out){
       const opacity=step===0?1:trailOpacity(step/(TRACE_STEPS-1));
       out[offset+9]=opacity*seamFade(phaseA-age*rateA[tracer]);
       out[offset+10]=opacity*seamFade(phaseB-age*rateB[tracer]);
-      out[offset+11]=step===0?12:3.4;
+      out[offset+11]=step===0?24:3.4;
       offset+=TRACE_STRIDE;
     }
   }
@@ -41,7 +41,7 @@ export function fillTracers(a,b,time,rateA,rateB,out){
 }
 // Joined triangle strips keep long trails continuous at every display scale.
 // Degenerate vertices break the finite sampled curve at its wrap seam.
-export function fillTraceRibbon(trace,out,ranges=[]){
+export function fillTraceRibbon(trace,out,ranges=[],count=TRACER_COLORS.length){
   let cursor=0;ranges.length=0;
   const distant=(a,b)=>{
     for(let base=0;base<=3;base+=3){
@@ -50,12 +50,14 @@ export function fillTraceRibbon(trace,out,ranges=[]){
     }
     return false;
   };
+  // Taper each history like a comet: hairline at the tail, full width behind the head.
   const put=(i,next,side)=>{
     for(let j=0;j<12;j++)out[cursor+j]=trace[i+j];
     for(let j=0;j<6;j++)out[cursor+12+j]=trace[next+j];
-    out[cursor+11]=1.25;out[cursor+18]=side;cursor+=RIBBON_STRIDE;
+    const along=(i/TRACE_STRIDE)%TRACE_STEPS/(TRACE_STEPS-1);
+    out[cursor+11]=.35+1.45*along*Math.sqrt(along);out[cursor+18]=side;cursor+=RIBBON_STRIDE;
   };
-  for(let tracer=0;tracer<TRACER_COLORS.length;tracer++){
+  for(let tracer=0;tracer<count;tracer++){
     const start=tracer*TRACE_STEPS*TRACE_STRIDE,first=cursor/RIBBON_STRIDE;
     for(let step=0;step<TRACE_STEPS;step++){
       const i=start+step*TRACE_STRIDE,previous=i-TRACE_STRIDE;
@@ -72,4 +74,10 @@ export function fillTraceRibbon(trace,out,ranges=[]){
     ranges.push([first,cursor/RIBBON_STRIDE-first]);
   }
   return ranges;
+}
+// Scroll handoffs: the old histories fade where they are, then the new ones fade in.
+// Blending two unrelated paths point by point would scribble across both shapes.
+export function traceHandoff(t){
+  const fade=x=>x*x*(3-2*x);
+  return t<.5?{blend:0,opacity:1-fade(t*2)}:{blend:1,opacity:fade(t*2-1)};
 }

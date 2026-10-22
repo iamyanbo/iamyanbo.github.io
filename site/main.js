@@ -1,7 +1,9 @@
 import {lorenzTrajectory,waveHeight} from './dynamics.js';
 import {ATTRACTORS} from './attractors.js';
 import {createScene,sectionPosition,alternatingSide,sceneExitY} from './attractor-scene.js';
-import {smoothstep} from './attractors.js';
+import {smoothstep,normalFrame} from './attractors.js';
+import {createChaosIntro} from './intro.js';
+import {createDust} from './dust.js';
 const canvas=document.querySelector('#system-canvas');
 const mode=document.body.dataset.concept,reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const ctx=mode==='combined'?null:canvas.getContext('2d',{alpha:true});
@@ -12,6 +14,29 @@ const trajectory=mode==='attractor'?lorenzTrajectory():null;
 let scene=null,heldAttractor=null,shapePosition=0,shapeTarget=0,heroBlend=0;
 let anchors=[],heroEnd=0,available=1,lastName='',lastPercent=-1,metricsAt=0,metricsFrames=0,metricsDraw=0;
 let sceneRows=[],sceneView=null,layoutPosition=0,viewHero=0;
+let pointerX=0,pointerY=0,tiltX=0,tiltY=0;
+addEventListener('pointermove',event=>{if(event.pointerType==='mouse'){pointerX=event.clientX/width*2-1;pointerY=event.clientY/height*2-1;shedDust(event);}},{passive:true});
+// ?intro=off and ?dust=off switch the two experiments off for comparison.
+const options=new URLSearchParams(location.search),introEnabled=options.get('intro')!=='off',dustEnabled=options.get('dust')!=='off';
+let spin=0,chaos=null,chaosEnd=null,introPlayed=false,dust=null,dustIndex=-1,lastPointer=null,lastRho='';
+const rhoReadout=document.querySelector('[data-rho]');
+const busyTarget='a,button,summary,details,input,textarea,select,label,p,li,h1,h2,h3,h4,figure,img,video,iframe,table,dialog,header,footer,.project-body,.essay-body,.engineering-body,.hero-system-label,.attractor-console,.system-controls,.personality-section,.notes-section';
+function heldIndex(){
+  const held=Math.round(shapePosition);
+  return Math.abs(shapePosition-held)>.02?-1:((held%ATTRACTORS.length)+ATTRACTORS.length)%ATTRACTORS.length;
+}
+// Moving near a shape sheds dust that the system's own equations pull onto the attractor.
+function shedDust(event){
+  if(!dustEnabled||!scene||!sceneView||!running||reduced.matches||(chaos&&!introPlayed)||event.target.closest?.(busyTarget))return;
+  const index=heldIndex(),x=event.clientX,y=event.clientY;
+  if(index<0||Math.hypot(x-sceneView.x,y-sceneView.y)>sceneView.scale*1.15){lastPointer=null;return;}
+  if(dustIndex!==index){const definition=ATTRACTORS[index];dust=createDust(definition,normalFrame(definition),scene.stepLength(index));dustIndex=index;}
+  const moved=lastPointer?Math.hypot(x-lastPointer[0],y-lastPointer[1]):8;lastPointer=[x,y];
+  for(let i=0,n=Math.min(5,Math.ceil(moved/7));i<n;i++){
+    const point=scene.unproject(sceneView,time,index,x+(Math.random()-.5)*12,y+(Math.random()-.5)*12,(Math.random()-.5)*.7);
+    if(point&&point.every(v=>Math.abs(v)<1.3))dust.spawn(point);
+  }
+}
 const panels=[...document.querySelectorAll('[data-scene]')],railLabel=document.querySelector('.attractor-rail');
 const personalSection=document.querySelector('#notes,.personality-section');
 let personalTop=Infinity,exitClearance=100;
@@ -73,6 +98,11 @@ function animate(now){
   layoutPosition+=(shapeTarget-layoutPosition)*(1-Math.exp(-delta*12));
   viewHero+=(heroBlend-viewHero)*(1-Math.exp(-delta*12));
   shapePosition+=((heldAttractor??shapeTarget)-shapePosition)*(1-Math.exp(-delta*16));
+  tiltX+=(pointerX-tiltX)*(1-Math.exp(-delta*2.5));tiltY+=(pointerY-tiltY)*(1-Math.exp(-delta*2.5));
+  chaos?.step(delta);
+  // The turn waits for the opening, which reads best from the composed camera angle.
+  if(!chaos||chaosEnd!==null)spin+=delta;
+  dust?.step(delta);
   const before=performance.now();draw();metricsDraw+=performance.now()-before;metricsFrames++;
   if(now-metricsAt>1500){
     canvas.dataset.fps=(metricsFrames*1000/(now-metricsAt)).toFixed(1);
@@ -160,6 +190,27 @@ function draw(){
       sceneView.scale=inWork?workScale:heroScale;
     }
     sceneView.y=sceneExitY(sceneView.y,sceneView.scale,personalTop-scrollY,exitClearance);
+    // Opening: one Lorenz trajectory lives through rising rho, then the full shape draws in beneath it.
+    sceneView.intro=null;sceneView.live=null;
+    if(chaos){
+      // Once the tracers have separated, the full curve fades in behind them; the tracers carry on as the ambient ones.
+      if(chaosEnd===null&&(chaos.progress>=.73||Math.abs(shapePosition)>.02||heroBlend>.05||!running))chaosEnd=time;
+      const after=chaosEnd===null?0:Math.min(1,(time-chaosEnd)/3.5);
+      sceneView.reveal=1;sceneView.guide=smoothstep(after);sceneView.arrive=1;sceneView.live=chaos;
+      const text='ρ = '+chaos.rho.toFixed(1)+' · '+chaos.phase;
+      if(text!==lastRho){rhoReadout.textContent=text;lastRho=text;}
+      rhoReadout.classList.toggle('visible',after<.4);
+      if(after>=1)introPlayed=true;
+      if(shapePosition>.5){chaos=null;introPlayed=true;sceneView.live=null;}
+    }else{
+      // Without the opening, the first shape draws itself in; paused or reduced motion shows it complete.
+      const intro=Math.min(1,time/4.2);
+      sceneView.reveal=introPlayed||!running||reduced.matches?1:1-Math.pow(1-intro,3);
+      sceneView.guide=1;sceneView.arrive=undefined;
+    }
+    if(dust&&dustIndex!==heldIndex()){dust=null;dustIndex=-1;}
+    sceneView.dust=dust&&dust.active?{index:dustIndex,fill:dust.fill}:null;
+    sceneView.tiltX=tiltX*.1;sceneView.tiltY=tiltY*.05;sceneView.spin=spin;
     scene.draw(sceneView,shapePosition,time);
     if(railLabel){railLabel.style.transform='translate3d('+(sceneView.x-150)+'px,'+(sceneView.y+sceneView.scale+18)+'px,0)';railLabel.style.opacity=String(t);}
     const index=Math.max(0,Math.round(shapePosition))%ATTRACTORS.length,name=ATTRACTORS[index].name;
@@ -221,5 +272,7 @@ document.querySelectorAll('.why-info').forEach(el=>{
   el.addEventListener('focusout',event=>{if(!el.contains(event.relatedTarget)){pinned=false;el.open=false;}});
   el.addEventListener('keydown',event=>{if(event.key==='Escape'){pinned=false;el.open=false;el.querySelector('summary').focus();}});
 });
-if(mode==='combined')createScene(canvas).then(value=>{scene=value;size();shapePosition=heldAttractor??(reduced.matches?Math.round(shapeTarget):shapeTarget);layoutPosition=reduced.matches?Math.round(shapeTarget):shapeTarget;viewHero=heroBlend;draw();label();start();}).catch(error=>{canvas.dataset.renderer='unavailable';console.warn(error.message);});
+if(mode==='combined')createScene(canvas).then(value=>{scene=value;
+  if(introEnabled&&running&&!reduced.matches&&scrollY<innerHeight*.3&&Math.round(shapeTarget)===0)chaos=createChaosIntro(normalFrame(ATTRACTORS[0]));
+  size();shapePosition=heldAttractor??(reduced.matches?Math.round(shapeTarget):shapeTarget);layoutPosition=reduced.matches?Math.round(shapeTarget):shapeTarget;viewHero=heroBlend;draw();label();start();}).catch(error=>{canvas.dataset.renderer='unavailable';console.warn(error.message);});
 else{size();label();start();}
