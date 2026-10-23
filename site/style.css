@@ -503,6 +503,9 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .rho-readout.visible{max-height:24px;opacity:1;margin:-3px 0 6px}
 
 /* Recognition shared by the CURI project heading and case study. */
-.project-award,.study .project-award{font:400 12px/1.7 var(--sans);color:var(--blue);margin:18px 0 0;max-width:100%;text-wrap:pretty}
-.project-award strong{font-weight:600}
-.study .project-award{margin-bottom:12px}
+.project-award,.study .project-award{font:400 13px/1.7 var(--sans);color:var(--blue);margin:18px 0 0;max-width:100%;text-wrap:pretty;border-left:2px solid var(--blue);padding:12px 16px;background:rgb(36 89 211 / 5%)}
+.project-award strong{display:block;font-size:16px;font-weight:600}
+.project-award .award-event,.project-award .award-prize,.project-award small{display:block}
+.project-award .award-prize{font-weight:600;margin-top:7px}
+.project-award small{font-size:11px;color:var(--muted)}
+.study .project-award{margin-bottom:20px}
