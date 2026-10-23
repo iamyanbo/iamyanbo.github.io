@@ -501,3 +501,8 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 /* Opening readout: rho rising through the onset of chaos. */
 .rho-readout{display:block;max-height:0;overflow:hidden;opacity:0;font:500 11px/1.6 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;transition:opacity .5s ease,max-height .5s ease,margin .5s ease}
 .rho-readout.visible{max-height:24px;opacity:1;margin:-3px 0 6px}
+
+/* Recognition shared by the CURI project heading and case study. */
+.project-award,.study .project-award{font:400 12px/1.7 var(--sans);color:var(--blue);margin:18px 0 0;max-width:100%;text-wrap:pretty}
+.project-award strong{font-weight:600}
+.study .project-award{margin-bottom:12px}
