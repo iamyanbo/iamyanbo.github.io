@@ -509,3 +509,21 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 .project-award .award-prize{font-weight:600;margin-top:7px}
 .project-award small{font-size:11px;color:var(--muted)}
 .study .project-award{margin-bottom:20px}
+
+/* Research front door: clear role, direct contact and a scannable work index. */
+[data-concept=combined] .research-position{margin-top:22px;font:500 13px/1.6 var(--mono);color:var(--blue);max-width:620px}
+[data-concept=combined] .research-availability{margin-top:9px;font:400 15px/1.6 var(--sans);color:var(--muted);max-width:580px}
+[data-concept=combined] .hero-links{flex-wrap:wrap;gap:12px 26px;max-width:620px;margin-top:24px}
+[data-concept=combined] .hero-description{max-width:560px}
+.work-index{padding:50px 0 65px;border-top:1px solid var(--line);position:relative}
+.work-index h2{font:400 clamp(28px,3.3vw,44px)/1.15 var(--display);margin-top:12px}
+.work-index>div>p{margin-top:14px;color:var(--muted);font-size:15px;line-height:1.7}
+.work-index-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:30px}
+.work-index-grid a{display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--surface) 94%,transparent);text-decoration:none;transition:transform .2s,border-color .2s}
+.work-index-grid a:hover{transform:translateY(-3px);border-color:var(--blue)}
+.work-index-grid small{font:500 10px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.work-index-grid strong{font:500 19px/1.3 var(--sans);color:var(--blue)}
+.work-index-grid span{font:400 13px/1.7 var(--sans);color:var(--muted)}
+@media(max-width:1100px){.work-index-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.work-index-grid{grid-template-columns:1fr}.work-index{padding:35px 0}.work-index-grid a{padding:20px}[data-concept=combined] .research-position{font-size:11px}[data-concept=combined] .research-availability{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.work-index-grid a{transition:none}.work-index-grid a:hover{transform:none}}

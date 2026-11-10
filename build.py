@@ -1,6 +1,7 @@
 from pathlib import Path
 import shutil,json,hashlib,re,subprocess
 from portfolio_content import revise_portfolio
+from research_frontdoor import research_frontdoor
 root=Path(__file__).resolve().parent
 out=root/'dist'
 out.mkdir(exist_ok=True)
@@ -119,6 +120,7 @@ for concept in concepts:
         html=html.replace('<strong>Attractors in motion</strong>','<strong><span class="attractor-kicker">Dynamical systems</span><span data-attractor-name>Lorenz</span></strong>')
         html=html.replace('Scroll to move between the shapes.</div>','Scroll to move between the shapes. <a class="why-link" href="#why-attractors">Why attractors? ↗</a></div>')
         html=html.replace('<span>Yanbo Cheng</span><a href="https://github.com/iamyanbo">','<span>Yanbo Cheng · <a href="attractor.html">Earlier designs</a></span><a href="https://github.com/iamyanbo">')
+    if concept['id']=='combined': html=research_frontdoor(html)
     html=html.replace('href="style.css"','href="'+stylesheet+'"').replace('src="main.js"','src="main.js?v='+version+'"')
     (out/concept['file']).write_text(html,encoding='utf-8')
 (out/'favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="9" fill="#275cc4"/><path d="m16 21 7 15 7-15M23 36v9m23-21c-10-8-19 0-19 9s9 17 19 9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',encoding='utf-8')
