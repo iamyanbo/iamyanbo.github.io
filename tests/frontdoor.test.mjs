@@ -14,3 +14,5 @@ test('reordered scene indexes remain contiguous and preserve negative results',(
  assert.match(html,/0 of 24/);
  assert.match(html,/marginal/i);
 });
+
+test("PJSS public snapshot is linked without publication claims",()=>{assert.match(html,/https:\/\/github.com\/iamyanbo\/PJSS/);assert.match(html,/not a peer-reviewed publication or a complete data release/);});
