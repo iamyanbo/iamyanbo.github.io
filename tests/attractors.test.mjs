@@ -122,3 +122,9 @@ test('the camera orbit fits each trajectory inside its reserved area',()=>{
     }
   }
 });
+
+test('seventh work panel cycles the attractor while preserving alternating layout',()=>{
+ assert.equal(sectionPosition(8500,[1000,2200,3200,4400,5600,7000],800),6);
+ assert.equal(sceneWeights(6).from,0);
+ assert.equal(alternatingSide(6),0);
+});

@@ -29,10 +29,10 @@ for(const file of await htmlFiles()){
   if(file==='curi.html'){assert(html.includes('214'));assert(html.includes('id="reproduce"'));continue;}
   if(!['index.html','attractor.html','wave.html','field.html'].includes(file))continue;
   assert(html.includes('id="motion-toggle"'));assert(html.includes('<dialog'));
-  assert.equal((html.match(/class="project(?: scene-panel)?"/g)||[]).length,file==='index.html'?4:2);
+  assert.equal((html.match(/class="project(?: scene-panel)?"/g)||[]).length,file==='index.html'?5:2);
   if(file==='index.html'){
-    assert.equal((html.match(/class="project-notes"/g)||[]).length,5);
-    assert.deepEqual([...html.matchAll(/data-scene="(\d+)"/g)].map(m=>Number(m[1])),[0,1,2,3,4,5]);
+    assert.equal((html.match(/class="project-notes"/g)||[]).length,6);
+    assert.deepEqual([...html.matchAll(/data-scene="(\d+)"/g)].map(m=>Number(m[1])),[0,1,2,3,4,5,6]);
   }
 }
 for(const file of (await readdir('dist')).filter(name=>name.endsWith('.js'))){

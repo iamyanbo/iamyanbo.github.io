@@ -10,9 +10,17 @@ test('research front door presents LLM work before selected research',()=>{
  assert.match(html,/mailto:yanbocheng01234@gmail.com/);
 });
 test('reordered scene indexes remain contiguous and preserve negative results',()=>{
- assert.deepEqual([...html.matchAll(/data-scene="(\d+)"/g)].map(x=>+x[1]),[0,1,2,3,4,5]);
+ assert.deepEqual([...html.matchAll(/data-scene="(\d+)"/g)].map(x=>+x[1]),[0,1,2,3,4,5,6]);
  assert.match(html,/0 of 24/);
  assert.match(html,/marginal/i);
 });
 
-test("PJSS public snapshot is linked without publication claims",()=>{assert.match(html,/https:\/\/github.com\/iamyanbo\/PJSS/);assert.match(html,/not a peer-reviewed publication or a complete data release/);});
+test("PJSS public snapshot is linked without publication claims",()=>{assert.match(html,/https:\/\/github.com\/iamyanbo\/PJSS/);assert.match(html,/not a peer-reviewed publication/);});
+
+test('new work follows native project presentation, without promotional cards',()=>{
+ assert.ok(!html.includes('work-index'));
+ assert.ok(!html.includes('pjss-release'));
+ assert.match(html, /class="project scene-panel" id="project-pjss"/);
+ assert.match(html, /89.0% exact support recovery/);
+ assert.match(html, /Generative AI was used extensively/);
+});
