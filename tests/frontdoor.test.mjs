@@ -24,3 +24,12 @@ test('new work follows native project presentation, without promotional cards',(
  assert.match(html, /89.0% exact support recovery/);
  assert.match(html, /Generative AI was used extensively/);
 });
+
+test('CURI award separates winning projects from participant count',()=>{
+ for(const file of ['dist/index.html','dist/curi.html']){
+  const page=readFileSync(file,'utf8');
+  assert.match(page,/Google’s All Things Agentic Hackathon/);
+  assert.match(page,/One of 16 prize-winning projects · 10,000\+ participants/);
+  assert.match(page,/https:\/\/devpost.com\/software\/curi/);
+ }
+});
