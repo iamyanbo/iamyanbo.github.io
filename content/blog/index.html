@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Beyond the Hill, a Diverse Landscape Awaits · Yanbo Cheng</title>
+  <meta name="description" content="Notes from working alongside AI agents in research: moving past benchmark hill climbing toward landscape discovery, abstraction, and cross-domain breadth.">
+  <link rel="canonical" href="https://iamyanbo.github.io/blog/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="@@STYLESHEET@@">
+</head>
+<body data-concept="note">
+  <a class="skip" href="#post">Skip to post</a>
+  <header class="note-masthead">
+    <a class="wordmark" href="/">Yanbo Cheng</a>
+    <a href="/">← Back to portfolio</a>
+  </header>
+  <main class="note-article" id="post">
+    <article>
+      <header class="note-intro">
+        <span class="overline note-category">Blog / Research &amp; AI</span>
+        <h1>Beyond the Hill, a Diverse Landscape Awaits</h1>
+        <p class="note-deck">Notes from working alongside AI agents on research, abstraction, and cross-domain breadth.</p>
+        <p class="note-byline">Yanbo Cheng · <a href="mailto:yanbocheng01234@gmail.com">yanbocheng01234@gmail.com</a> · <a href="https://github.com/iamyanbo/PJSS">github.com/iamyanbo/PJSS</a></p>
+      </header>
+
+      <div class="note-prose">
+        <p>As a master's student, working with AI systems (Claude, ChatGPT, Gemini, etc.) has been a perplexing experience. On one hand, they already outpace me at low-level implementation, and recent Lean-verified work on the <a href="https://alpo.ge/remark.pdf">Riemann hypothesis</a> suggests they are capable of much more in formal proofs and contributions to mathematics as well as other fields of science (even if those strongest internal setups stay behind closed doors). On the other hand, once you step into open-ended research (or anything open-ended, for that matter), they still struggle at the higher end of abstraction, connecting ideas across fields and coming up with genuinely inspiring directions on their own. I use AI mostly for research: writing code, collaborating on ideas, and building on established methods. This post is a collection of notes I made while working alongside them.</p>
+
+        <h2>Climbing Up the Hill</h2>
+        <p>Right now, the way to express a model's capability is through a benchmark, and the way to interpret progress is by seeing how it "hill climbs" those benchmarks from version to version. Take <a href="https://artificialanalysis.ai/">Artificial Analysis</a>, for example: they continuously fold new benchmarks and curves into one headline intelligence score and incorporate new models as they come out. While this ranking is useful at a glance, it is not indicative of the true capabilities of these models. Take GLM-5.3, for example: it sits well below the current frontier model Claude Fable 5.2 on general benchmarks, yet it can still outperform it on specialized cyber tasks. This is partly due to frontier US labs deliberately restricting cyber capabilities out of fear they could cause catastrophic infrastructure damage if misused.</p>
+        <p>As a brief aside, there is also a poor practice of selective reporting and training for specific metrics, now often called "benchmaxxing." It is easy to collect more data and train specifically for one task, but that does not necessarily mean it will generalize to other fields. To compensate for this, reports can hide scores where a model trails, dodge otherwise clean comparisons at matched model size or specification, or present results skewed in favor of one model. This is something everyone should be aware of as these models become more integrated with our everyday lives.</p>
+        <p>In research itself, hill climbing shows up implicitly. A great example is Karpathy's <a href="https://github.com/karpathy/autoresearch"><em>autoresearch</em></a>. While it should not be taken as a complete pipeline for how to conduct research (for example, it naively restricts training intervals to five minutes), in practice this setup seems to have propagated to a majority of published "autoresearch" results. The problem with this kind of setup is that, given an environment, a target metric, and an evaluator, a drop-in model will almost always default to local hill climbing: adjusting hyperparameters and making small incremental tweaks. Even when it finds a big jump in score, more often than not it turns out to be rediscovering known methods from already established work because it never stopped to read the literature first.</p>
+
+        <h2>Discovering Surrounding Landscapes</h2>
+        <p>Moving past the hill, we realize that it is only one small part of the landscape. What we actually need to think about is <strong>landscape discovery</strong>.</p>
+
+        <figure>
+          <div class="blog-photo-pair">
+            <img src="/assets/blog/huangshan-1.jpg" alt="Layered blue mountain ridges in Huangshan above a sea of clouds at dusk" loading="lazy">
+            <img src="/assets/blog/huangshan-2.jpg" alt="Pine silhouettes framing misty Huangshan peaks at twilight" loading="lazy">
+          </div>
+          <figcaption>Huangshan, China: ridge after ridge past the first slope.</figcaption>
+        </figure>
+
+        <p>Say you were in the Himalayan mountain ranges: how would you know which peak actually gives the best view? The easiest one to climb? The one no one has climbed yet? Of course, the most prestigious title would be to climb Everest, but at the bottom of the valley, with no direction or map, how would you know where Everest is? Sure, you can rush straight up the nearest tall mountain with high hopes, but only after you reach the top will you realize that perhaps this summit is not what you hoped for, and that the view is blocked on all sides by much taller mountains you never noticed from below.</p>
+        <p>Of course, this analogy does not carry over literally into AI research, as theory operates in higher dimensions and greater complexity; effects such as the curse of dimensionality break this simple picture. Still, as a guide, the instinct holds. Before committing weeks to climbing one slope, it pays to look around for a genuinely better mountain first. Usually, knowing where to look comes from having climbed other mountains before. That experience is what I want to convey to you reading this: to step up in abstraction and bring intuition from completely different environments into the problem in front of you.</p>
+
+        <h2>Human in the Loop</h2>
+        <p>The term "autoresearch" has been thrown around enough to become more or less synonymous with hill climbing, largely because its environments are built to reward local and measurable gains. In actual research, novel implementations are much more open-ended: could an AI create an actual paradigm shift in a specific field on its own, or would it default to minor improvements within fixed specifications?</p>
+        <p>As seen in OpenAI's Navier-Stokes proof, one could potentially brute-force 10,000 parallel agents or burn through hundreds of billions of tokens on one problem to arrive at a solution. Yet this is remarkably inefficient, not to mention the effort required afterward just to understand an enigmatic, machine-generated proof.</p>
+        <p>Instead, a better approach may be stepping sideways. I argue that it is beneficial to be a "jack of all trades" in this age of AI development. Coming from a math background, the part I enjoy most is cross-domain structure: that moment when an idea from a seemingly unrelated area solves another problem is genuinely fascinating to me. It pushes you to explore more deeply why it works fundamentally and motivates you to reason about even more diverse applications. With AI, this is now easier than ever to realize. You do not necessarily need to be a specialist in every field anymore; you only need enough breadth to catch a rough connection and point the model toward the idea. That breadth, however, is something I cannot teach and must be acquired with time and practice, though a good starting point is constantly reading newly published literature from varied sources.</p>
+        <p>I will take my recent project, <a href="https://github.com/iamyanbo/PJSS">PJSS</a> (a sparse differential-equation solver), as an example:</p>
+        <ul>
+          <li>While reading a paper on zeroth-order deep learning (<a href="https://qlabs.sh/research/dust">DUST</a>), I noticed a rough structural parallel to how my own solver handled noise and sequential steps. Having the agent formalize this shift from sequential loops to parallel solves resulted in a massive speedup compared to other methods: roughly 7 seconds per run, compared to around 8 hours for other solvers.</li>
+          <li>Noticing that my method collapsed unexpectedly to <strong>0.265</strong> accuracy when observation noise dropped to zero, I connected a paper I had read about floating-point rounding errors in softmax (<a href="https://arxiv.org/abs/2610.31642">Barron et al.</a>). I wondered if integrating differential equations could also run into similar numerical-floor issues. While that specific guess turned out to be wrong, working with the model to test the connection uncovered the real bug: deterministic midpoint discretization error. When fixed, recovery lifted from <strong>0.265 to 1.000</strong>.</li>
+        </ul>
+        <p>These examples go to show that even a half-formed guess from a seemingly unrelated paper can change the direction of a project once you and an agent work out the fundamentals behind it (and even if it turns out to be wrong, at least you learned why it did not work). In <a href="https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/"><em>How to be more ambitious: A tutorial for humans with models</em></a>, Felix Rieseberg highlights <strong>range</strong> as one of the main advantages humans bring to AI. Indeed, being a generalist in research goes much further than you would expect. Spinning up a swarm of specialist agents to review your work is helpful, but stepping into the loop yourself with a sharper "hunch" will often go much further.</p>
+        <p>Before you set out on an expedition to relate everything to everything, though, I should warn you that models are dangerously convincing. Without rigorous checking and staying skeptical, an agent will gladly hand you an optimistic theory that has no merit the moment it runs. One rule that helped me a great deal is adding the constraint:</p>
+        <blockquote>
+          <p>Derive everything from first principles, and explicitly list which claims cannot be proved on paper and must be tested experimentally.</p>
+        </blockquote>
+        <p>This habit catches many plausible hallucinations before you waste a day watching an agent carry out the work.</p>
+
+        <h2>Learn Through Failure</h2>
+        <p>Here are some more ideas that I have personally learned and thought would be worth sharing:</p>
+        <ul>
+          <li><strong>Keep a postmortem of what failed:</strong> Agents focus heavily on whatever improved the score and essentially forget dead ends once the KV cache clears and context compacts. While I expect this to improve in the future, it is good practice to document failures and why they failed, allowing later sessions to stay on track and avoid repeating the same mistake twice.</li>
+          <li><strong>Do literature review first:</strong> Even though this is obvious to a researcher, agents in my experience regularly ignore prior work or do not dig deep enough (often skimming abstracts rather than the full PDF) before starting experiments, only to end up rediscovering techniques already published. Turning off web access makes sense when benchmarking raw intelligence, but in real research, training cutoffs mean you should remind your agent to read recent and classic literature first so both of you understand the state of the art before reinventing the wheel.</li>
+          <li><strong>Be skeptical of the evaluation:</strong> Sometimes you can get lazy, give the agent an instruction to test an idea, and get back numbers that look spectacular. Be skeptical of this: it can create synthetic cases that effectively cheat to look better on paper. In a benchmark test, always check what other research uses (which ties back to the previous point) and anchor your testing around those evaluations. GPT models, in my experience, drift into these naive, optimistic setups more often than Claude, though you should always audit the test environment (and its implementation in general) yourself regardless of the model.</li>
+        </ul>
+
+        <h2>The View From Here</h2>
+        <p>The model you use is your equipment for climbing the mountain. Beyond whatever notes and compacted summaries survive in your workspace, there is no continual learning in the general sense from working alongside you. Because their deployed weights are frozen, these models do not change with you. Once a session resets, the model returns to the exact state it shipped in, while you are the one who carries every lesson forward. I will not wade into whether the transformer architecture itself is flawed or whether there is a better direction for AI altogether; by themselves, these systems already work remarkably well. Still, it helps to treat them honestly as climbing gear. You can prefer different models for different mountains, just as you should expect them to break, malfunction, or simply fall short on certain terrain. Here again, being a generalist helps: knowing how different models behave across different kinds of work lets you match the right tool to the problem at hand, and recognize when to step in yourself.</p>
+
+        <figure>
+          <div class="blog-photo-pair">
+            <img src="/assets/blog/switzerland-1.jpg" alt="Alpine valley in Switzerland looking toward snow-covered peaks under blue sky" loading="lazy">
+            <img src="/assets/blog/switzerland-2.jpg" alt="Steep Swiss alpine rock face rising above a winding green mountain stream" loading="lazy">
+          </div>
+          <figcaption>Switzerland: halfway up one valley, looking toward higher ranges.</figcaption>
+        </figure>
+
+        <p>From halfway up a hill, we may not be able to see where the highest peaks actually lie, yet the scenery opening around us is already worth appreciating. The mountain we are climbing today may turn out to be only a foothill toward a much bigger and taller range, with rougher edges, and more beautiful views. Whether we keep climbing up the nearest slope or use this moment to explore the wider landscape is ultimately up to us. Every new hill you climb makes it a little easier to see what else is out there.</p>
+      </div>
+    </article>
+  </main>
+  <footer class="note-footer">
+    <span>Yanbo Cheng</span>
+    <div class="footer-links">
+      <a href="/">Portfolio ↗</a>
+      <a href="mailto:yanbocheng01234@gmail.com">Email me ↗</a>
+      <a href="https://github.com/iamyanbo">GitHub ↗</a>
+    </div>
+  </footer>
+</body>
+</html>

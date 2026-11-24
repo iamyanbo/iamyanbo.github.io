@@ -5,7 +5,8 @@ from research_frontdoor import research_frontdoor
 root=Path(__file__).resolve().parent
 out=root/'dist'
 out.mkdir(exist_ok=True)
-subprocess.run(['node',str(root/'scripts/bake-attractors.mjs')],check=True)
+if shutil.which('node') or not ((out/'curves.bin').exists() and (out/'tracer-curves.bin').exists()):
+    subprocess.run(['node',str(root/'scripts/bake-attractors.mjs')],check=True)
 version=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((root/'site').iterdir()) if p.suffix in ['.js','.css'])+(out/'curves.bin').read_bytes()+(out/'tracer-curves.bin').read_bytes()).hexdigest()[:12]
 for p in (root/'site').iterdir():
     if p.suffix=='.js':
@@ -137,5 +138,12 @@ for source in (root/'content/notes').glob('*.html'):
     destination=out/'notes'/slug
     destination.mkdir(parents=True,exist_ok=True)
     (destination/'index.html').write_text(page,encoding='utf-8')
+blog_source=root/'content/blog/index.html'
+if blog_source.exists():
+    blog_page=blog_source.read_text(encoding='utf-8').replace('@@STYLESHEET@@','/'+stylesheet).replace('@@VERSION@@',version)
+    assert '@@' not in blog_page, 'Unfinished blog page'
+    blog_out=out/'blog'
+    blog_out.mkdir(parents=True,exist_ok=True)
+    (blog_out/'index.html').write_text(blog_page,encoding='utf-8')
 shutil.copytree(root/'1',out/'1',dirs_exist_ok=True)
 (out/'.nojekyll').touch()

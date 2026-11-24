@@ -170,7 +170,7 @@ function draw(){
     let displayScale=workScale;
     const active=Math.max(0,Math.min(sceneRows.length-1,Math.round(shapeTarget)));
     const from=Math.min(sceneRows.length-1,Math.floor(layoutPosition)),to=Math.min(sceneRows.length-1,from+1),blend=layoutPosition-from;
-    const centerFor=index=>Math.max(height*.44,(sceneRows[index]?.top??0)-scrollY+workScale+12);
+    const centerFor=index=>Math.max(height*.44,(sceneRows[index]?.bodyTop??sceneRows[index]?.top??0)-scrollY+workScale+12);
     let workY=mobile?(sceneRows[active]?.window??0)-scrollY+170:centerFor(from)*(1-blend)+centerFor(to)*blend;
     if(!mobile&&blend>0&&from!==to){
       // Cross the centre in the empty space between entries, not through their prose.

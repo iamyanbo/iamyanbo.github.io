@@ -13,7 +13,7 @@ def revise_portfolio(html, root: Path):
     change('<a href="https://iamyanbo.github.io/llm-notes/">Read the essays <span aria-hidden="true">↗</span></a>', '<a href="#essays">Personal projects <span aria-hidden="true">↘</span></a>')
     change('I study how models represent language and the visual world. I build experiments and interactive explanations to understand them.',
            'A place to showcase the interesting work and projects I’ve built, and to explore models and the mathematics behind them.')
-    change('<a href="#essays">Essays</a><a href="#about">About</a>', '<a href="#essays">Personal projects</a><a href="#notes">Notes</a><a href="#about">About me</a>')
+    change('<a href="#essays">Essays</a><a href="#about">About</a>', '<a href="#essays">Personal projects</a><a href="blog/">Blog</a><a href="#notes">Notes</a><a href="#about">About me</a>')
     change('Questions I’m working on.', 'Current Research')
     change('<p>Visual prediction, decisions from learned representations, and the experiments that test them.</p>', '')
     change('Can a model predict what a drone will see next?', 'Long Horizon Planning for UAV Navigation')
