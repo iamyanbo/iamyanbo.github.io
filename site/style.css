@@ -172,7 +172,7 @@ body[data-concept=combined]{--paper:#f5f8ff;--blue:#2459d3;--muted:#52617a}
 [data-concept=combined] main>section:not(.hero){width:100%}
 [data-concept=combined] .project.scene-panel{display:block;position:relative;min-height:115svh;padding:55px 0 110px}
 [data-concept=combined] .project.scene-panel+.project{padding-top:90px}
-[data-concept=combined] .scene-panel[data-side=right]>:is(.project-body,.essay-body){margin-left:auto}
+[data-concept=combined] .scene-panel[data-side=right]>:is(.project-body,.essay-body,.engineering-body){margin-left:auto}
 [data-concept=combined] :is(.project-body,.essay-body,.engineering-body){width:47%;background:transparent}
 [data-concept=combined] .project-body{display:flex;flex-direction:column;gap:30px}
 [data-concept=combined] .project-body .project-visual{order:0}
